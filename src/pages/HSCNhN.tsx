@@ -102,7 +102,7 @@ export default function HSCNhN() {
             <div className="flex flex-col gap-1 text-sm">
               <span className="font-semibold text-blue-900">Quyền hạn tài khoản</span>
               <p className="text-blue-800 text-xs leading-relaxed">
-                Tài khoản có toàn quyền quản trị phân ca, duyệt phiếu và giám sát chấm công theo sơ đồ tổ chức được phân cấp.
+                Tài khoản có toàn quyền quản trị phân ca và duyệt phiếu theo sơ đồ tổ chức được phân cấp.
               </p>
             </div>
           </div>

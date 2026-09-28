@@ -663,7 +663,7 @@ function AdminDashboard() {
             </h2>
             <span className="text-xs text-slate-400">Ghi nhận tự động từ cổng kiểm soát</span>
           </div>
-          <Link to="/gi-m-s-t-ch-m-c-ng" className="text-xs font-semibold text-blue-600">Xem tất cả →</Link>
+          <Link to="/danh-sach-vi-pham" className="text-xs font-semibold text-blue-600">Xem tất cả →</Link>
         </header>
         <table className="w-full text-left">
           <thead>

@@ -616,6 +616,9 @@ export default function LichHop() {
   const [query, setQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [detail, setDetail] = useState<Meeting | null>(null);
+  const [detailPage, setDetailPage] = useState(1);
+
+  useEffect(() => { if (detail) setDetailPage(1) }, [detail?.id]);
 
   useEffect(() => {
     if (role !== 'MANAGER') return;
@@ -646,6 +649,16 @@ export default function LichHop() {
   
   const canManage = role === 'MANAGER';
   const remove = (id: string) => setMeetings(x => x.filter(m => m.id !== id));
+  const detailAttendees = [
+    ['LD', detail?.host || 'Lê Hoàng Dũng', 'Trưởng phòng IT', 'Chủ trì (Host)', '0912.345.678'],
+    ['LB', 'Lê Thanh Bình', 'Frontend Developer', 'Thành viên dự án', '0988.123.456'],
+    ['NH', 'Nguyễn Văn Hùng', 'Kỹ sư phần mềm', 'Thành viên dự án', '0903.456.789'],
+    ['KL', 'Vũ Khánh Linh', 'Senior Dev', 'Thành viên dự án', '0977.889.900'],
+    ['TH', 'Trần Thu Hà', 'Khách', 'Khách mời HR', '0934.556.677'],
+    ['PM', 'Phạm Minh Tuấn', 'Backend Developer', 'Thành viên dự án', '0905.332.118'],
+    ['QB', 'Đỗ Quốc Bảo', 'QA Engineer', 'Thành viên dự án', '0918.220.445'],
+    ['TM', 'Trần Thị Mai', 'Nhân viên', 'Thành viên dự án', '0966.112.889'],
+  ];
 
   return (
     <div className="flex flex-col gap-6 p-6 min-h-screen bg-[#F8FAFC]">
@@ -755,32 +768,74 @@ export default function LichHop() {
       {/* Meeting detail modal — same structure as employee */}
       {detail && role === 'MANAGER' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm" onMouseDown={e => { if (e.target === e.currentTarget) closeManagerDetail() }}>
-          <section className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl animate-scale-in">
+          <section className="flex max-h-[94vh] w-full max-w-[760px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl animate-scale-in">
             <header className="flex shrink-0 items-center justify-between border-b border-slate-100 px-6 py-4">
-              <div className="flex items-center gap-3"><span className="material-symbols-outlined rounded-xl bg-blue-50 p-2 text-blue-600">event</span><h2 className="text-base font-bold text-slate-900">Chi tiết lịch họp</h2><span className={`badge ${detail.status === 'Đang diễn ra' ? 'badge-green' : detail.status === 'Sắp diễn ra' ? 'badge-blue' : 'badge-slate'}`}>{detail.status}</span></div>
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined rounded-xl border border-blue-100 bg-blue-50 p-2 text-[20px] text-blue-600">event</span>
+                <h2 className="text-base font-bold text-slate-900">Chi tiết cuộc họp</h2>
+                <span className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${detail.status === 'Đang diễn ra' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : detail.status === 'Sắp diễn ra' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-slate-50 text-slate-600'}`}>• {detail.status}</span>
+              </div>
               <button onClick={closeManagerDetail} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </header>
             <div className="flex-1 overflow-y-auto p-6">
               <h3 className="text-lg font-bold text-slate-900">{detail.title}</h3>
-              <p className="mt-1 text-xs text-slate-500">Tổ chức bởi <b>{detail.host}</b></p>
-              <div className="mt-5 grid grid-cols-2 gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm">
-                <div><p className="text-xs text-slate-500">Thời gian diễn ra</p><p className="mt-1 font-semibold">{detail.date}</p><p className="text-xs text-slate-500">{detail.start} - {detail.end}</p></div>
-                <div><p className="text-xs text-slate-500">Hình thức & Địa điểm</p><p className="mt-1 font-semibold">{detail.room}</p></div>
+              <p className="mt-1.5 flex items-center gap-1.5 text-xs text-slate-500">
+                <span className="material-symbols-outlined text-[14px] text-blue-600">verified</span>
+                Tổ chức bởi <b className="text-slate-700">{detail.host}</b><span className="text-slate-400">(Trưởng phòng IT)</span>
+              </p>
+              <div className="my-5 border-t border-slate-100" />
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="flex items-center gap-1.5 text-xs text-slate-500"><span className="material-symbols-outlined text-[15px] text-blue-600">schedule</span>Thời gian diễn ra</p>
+                  <p className="mt-1.5 text-sm font-bold text-slate-800">{detail.date === '21/10/2024' ? 'Hôm nay, Thứ Hai 21/10/2024' : detail.date}</p>
+                  <p className="text-xs text-slate-500">{detail.start} - {detail.end} <span className="text-slate-400">(Thời lượng: 60 phút)</span></p>
+                </div>
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="flex items-center gap-1.5 text-xs text-slate-500"><span className="material-symbols-outlined text-[15px] text-blue-600">apartment</span>Hình thức &amp; Địa điểm</p>
+                  <p className="mt-1.5 text-sm font-bold text-slate-800">{detail.room}</p>
+                </div>
               </div>
-              <div className="mt-5"><p className="text-sm font-bold">Nội dung cuộc họp</p><div className="mt-2 rounded-xl border bg-slate-50 p-4 text-sm leading-6 text-slate-600">Rà soát tiến độ công việc, thống nhất phương án xử lý các nội dung tồn đọng và phân công nhiệm vụ tiếp theo.</div></div>
-              <div className="mt-5"><p className="mb-2 text-sm font-bold">Người tham gia ({detail.participants.length})</p><div className="divide-y overflow-hidden rounded-xl border">{detail.participants.map((p,i)=><div key={p} className="flex items-center justify-between px-4 py-3"><span className="text-sm font-semibold">{p}</span><span className="badge badge-slate">{i===0?'Thư ký':'Nhân viên'}</span></div>)}</div></div>
+
+              <p className="mb-2 mt-5 flex items-center gap-1.5 text-xs font-bold uppercase text-slate-600">
+                <span className="material-symbols-outlined text-[15px]">group</span>Thành phần tham gia (8 người) – Trang 1/2
+              </p>
+              <div className="overflow-hidden rounded-xl border border-slate-200">
+                <table className="w-full text-left">
+                  <thead className="bg-slate-50 text-[10px] uppercase text-slate-500">
+                    <tr><th className="px-4 py-3">Thành viên</th><th className="px-4 py-3">Vai trò</th><th className="px-4 py-3">Trạng thái</th></tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {detailAttendees.slice(detailPage === 1 ? 0 : 5, detailPage === 1 ? 5 : 8).map((m, i) => (
+                      <tr key={`${m[1]}-${i}`}>
+                        <td className="px-4 py-2.5"><div className="flex items-center gap-2.5"><span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${i === 0 ? 'bg-blue-600 text-white' : i === 1 ? 'bg-emerald-100 text-emerald-700' : i === 3 ? 'bg-rose-50 text-rose-600' : 'bg-blue-50 text-blue-700'}`}>{m[0]}</span><div><p className="text-xs font-semibold text-slate-800">{m[1]}</p><p className="text-[9px] text-slate-400">⌕ {m[4]}</p></div></div></td>
+                        <td className="px-4 py-2.5"><p className="text-xs font-medium text-slate-800">{m[2]}</p><p className={`text-[9px] ${i === 0 ? 'text-blue-600' : i === 4 ? 'text-amber-600' : 'text-slate-400'}`}>{m[3]}</p></td>
+                        <td className="px-4 py-2.5"><span className="inline-flex whitespace-nowrap rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[9px] font-medium text-blue-700">✉ Đã gửi lời mời</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-4 py-2.5 text-[10px] text-slate-500">
+                  <span>{detailPage === 1 ? 'Hiển thị 1 – 5 trong số 8 người tham gia' : 'Hiển thị 6 – 8 trong số 8 người tham gia'}</span>
+                  <div className="flex gap-1">
+                    <button onClick={() => setDetailPage(1)} disabled={detailPage === 1} className="h-6 w-6 rounded border border-slate-200 disabled:text-slate-300">‹</button>
+                    <button onClick={() => setDetailPage(1)} className={`h-6 w-6 rounded font-semibold ${detailPage === 1 ? 'bg-blue-600 text-white' : 'border border-slate-200'}`}>1</button>
+                    <button onClick={() => setDetailPage(2)} className={`h-6 w-6 rounded font-semibold ${detailPage === 2 ? 'bg-blue-600 text-white' : 'border border-slate-200'}`}>2</button>
+                    <button onClick={() => setDetailPage(2)} disabled={detailPage === 2} className="h-6 w-6 rounded border border-slate-200 disabled:text-slate-300">›</button>
+                  </div>
+                </div>
+              </div>
             </div>
             <footer className="flex shrink-0 items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-4">
-              <button onClick={() => { remove(detail.id); closeManagerDetail() }} className="btn-danger">
-                <span className="material-symbols-outlined text-[16px]">cancel</span>
+              <button onClick={() => { remove(detail.id); closeManagerDetail() }} className="btn-danger text-xs">
+                <span className="material-symbols-outlined text-[16px]">event_busy</span>
                 Hủy lịch họp
               </button>
-              <div className="flex gap-3"><button onClick={closeManagerDetail} className="btn-secondary">Đóng</button><button onClick={() => { closeManagerDetail(); setShowForm(true) }} className="btn-primary">
-                <span className="material-symbols-outlined text-[16px]">edit</span>
+              <button onClick={() => { closeManagerDetail(); setShowForm(true) }} className="btn-secondary text-xs">
+                <span className="material-symbols-outlined text-[16px]">edit_calendar</span>
                 Chỉnh sửa
-              </button></div>
+              </button>
             </footer>
           </section>
         </div>

@@ -52,7 +52,8 @@ export default function App() {
             <Route path="/nh-t-k-ra-v-o" element={<NhTKRaVO />} />
             <Route path="/nh-t-k-ra-v-o-quan-ly" element={<ManagerAccessLog />} />
             <Route path="/b-ng-c-ng" element={<BNgCNg />} />
-            <Route path="/gi-m-s-t-ch-m-c-ng" element={<GiMSTChMCNg />} />
+            <Route path="/gi-m-s-t-ch-m-c-ng" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/danh-sach-vi-pham" element={<GiMSTChMCNg />} />
             <Route path="/i-u-ch-nh-c-ng" element={<IUChNhCNg />} />
             <Route path="/qu-n-l-phi-u" element={<QuNLPhiU />} />
             <Route path="/c-ng-t-c-nh-m-c" element={<CNgTCNhMC />} />

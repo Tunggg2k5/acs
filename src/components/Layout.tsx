@@ -16,7 +16,7 @@ const ROUTE_PERMISSIONS: Record<string, Role[]> = {
   '/nh-t-k-ra-v-o':          ['ADMIN', 'MANAGER', 'EMPLOYEE'],
   '/nh-t-k-ra-v-o-quan-ly':  ['MANAGER'],
   '/b-ng-c-ng':              ['ADMIN', 'MANAGER', 'EMPLOYEE'],
-  '/gi-m-s-t-ch-m-c-ng':    ['ADMIN', 'MANAGER', 'EMPLOYEE'],
+  '/danh-sach-vi-pham':      ['MANAGER', 'EMPLOYEE'],
   '/i-u-ch-nh-c-ng':         ['ADMIN'],
   '/qu-n-l-phi-u':           ['ADMIN', 'MANAGER', 'EMPLOYEE'],
   '/c-ng-t-c-nh-m-c':       ['ADMIN', 'MANAGER', 'EMPLOYEE'],
@@ -332,7 +332,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     '/nh-t-k-ra-v-o': 'Nhật ký ra vào',
     '/nh-t-k-ra-v-o-quan-ly': 'Nhật ký ra vào (Quản lý)',
     '/b-ng-c-ng': 'Bảng công',
-    '/gi-m-s-t-ch-m-c-ng': 'Giám sát chấm công',
+    '/danh-sach-vi-pham': 'Danh sách vi phạm',
     '/i-u-ch-nh-c-ng': 'Điều chỉnh công',
     '/qu-n-l-phi-u': 'Phiếu & Đơn từ',
     '/c-ng-t-c-nh-m-c': 'Công tác & Đề xuất',
@@ -398,7 +398,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <NavLink to="/qu-n-l-phi-u" icon="request_quote" label="Phiếu & Đơn từ" badge="2" />
               <NavLink to="/lich-hop" icon="event" label="Quản lý lịch họp" />
               <NavLink to="/cong-viec" icon="assignment_turned_in" label="Danh sách công việc" />
-              <NavLink to="/gi-m-s-t-ch-m-c-ng" icon="warning_amber" label="Vi phạm của tôi" />
+              <NavLink to="/danh-sach-vi-pham" icon="warning_amber" label="Vi phạm của tôi" />
             </>
           ) : isAdmin ? (
             <>
@@ -408,7 +408,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <NavSection label="Chấm công" />
               <NavLink to="/nh-t-k-ra-v-o" icon="rule" label="Nhật ký ra vào" />
               <NavLink to="/b-ng-c-ng" icon="table_chart" label="Bảng công" />
-              <NavLink to="/gi-m-s-t-ch-m-c-ng" icon="monitor_heart" label="Giám sát chấm công" />
               <NavLink to="/i-u-ch-nh-c-ng" icon="edit_calendar" label="Điều chỉnh công" />
 
               <NavSection label="Phiếu & Đơn từ" />
@@ -423,17 +422,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <NavLink to="/qu-n-l-phi-u?scope=mine" icon="request_quote" label="Phiếu & đơn từ" badge="2" />
               <NavLink to="/lich-hop" icon="event" label="Danh sách lịch họp" />
               <NavLink to="/cong-viec" icon="assignment_turned_in" label="Danh sách nhiệm vụ" />
-              <NavLink to="/gi-m-s-t-ch-m-c-ng" icon="warning_amber" label="Danh sách vi phạm của tôi" />
+              <NavLink to="/danh-sach-vi-pham" icon="warning_amber" label="Danh sách vi phạm của tôi" />
 
               <NavSection label="Quản lý" />
               <NavLink to="/l-ch-l-m-vi-c" icon="calendar_month" label="Quản lý lịch làm việc" />
               <NavLink to="/qu-n-l-phi-u?scope=team" icon="assignment" label="Quản lý phiếu" />
               <NavLink to="/quan-ly-nhiem-vu" icon="task_alt" label="Quản lý nhiệm vụ" />
               <NavLink to="/b-ng-c-ng" icon="table_chart" label="Bảng công" />
-              <NavLink to="/gi-m-s-t-ch-m-c-ng?scope=monitor" icon="monitoring" label="Giám sát chấm công" />
               <NavLink to="/nh-t-k-ra-v-o-quan-ly" icon="login" label="Nhật ký ra vào" />
               <NavLink to="/danh-s-ch-nh-n-vi-n" icon="groups" label="Danh sách nhân viên" />
-              <NavLink to="/gi-m-s-t-ch-m-c-ng?scope=team" icon="warning_amber" label="Danh sách vi phạm chung" />
+              <NavLink to="/danh-sach-vi-pham?scope=team" icon="warning_amber" label="Danh sách vi phạm" />
             </>
           ) : (
             <>
@@ -457,7 +455,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <NavDropdown label="Chấm công" icon="fingerprint">
                 {canAccess('/nh-t-k-ra-v-o') && <NavLink to="/nh-t-k-ra-v-o" icon="login" label="Nhật ký ra vào" />}
                 {canAccess('/b-ng-c-ng') && <NavLink to="/b-ng-c-ng" icon="table_chart" label="Bảng công" />}
-                {canAccess('/gi-m-s-t-ch-m-c-ng') && <NavLink to="/gi-m-s-t-ch-m-c-ng" icon="monitor_heart" label="Giám sát chấm công" />}
                 {canAccess('/i-u-ch-nh-c-ng') && <NavLink to="/i-u-ch-nh-c-ng" icon="edit_calendar" label="Điều chỉnh công" />}
               </NavDropdown>
 

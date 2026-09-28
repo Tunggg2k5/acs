@@ -1,8 +1,31 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useRole } from '../context/RoleContext';
 
 type Alert = { id: string; empId: string; name: string; dept: string; date: string; type: string; detail: string; severity: string };
+
+type ViolationRequest={id:string;empId:string;name:string;type:string;occurred:string;status:'Chờ duyệt'|'Đã duyệt'|'Chưa giải trình'|'Từ chối';content:string};
+const violationRequests:ViolationRequest[]=[
+  {id:'PH-2026-018',empId:'NV001',name:'Nguyễn Văn Minh',type:'Đi muộn (15p)',occurred:'26/09/2026 08:48',status:'Chờ duyệt',content:'Xe bị hỏng dọc đường tại đường Nguyễn Trãi nên đến văn phòng muộn 15 phút. Đã thông báo cho Leader qua tin nhắn Zalo trước ca làm việc.'},
+  {id:'PH-2026-019',empId:'NV002',name:'Lê Thu Hà',type:'Quên chấm công',occurred:'25/09/2026 17:30',status:'Đã duyệt',content:'Nhân viên quên thao tác chấm công khi rời văn phòng.'},
+  {id:'PH-2026-020',empId:'NV009',name:'Bùi Thị Hương',type:'Chưa check-out',occurred:'24/09/2026 18:00',status:'Chưa giải trình',content:'Hệ thống không ghi nhận dữ liệu check-out cuối ca.'},
+  {id:'PH-2026-021',empId:'NV014',name:'Trần Đức Thắng',type:'Đi muộn (35p)',occurred:'24/09/2026 09:05',status:'Từ chối',content:'Giải trình chưa cung cấp đủ thông tin xác minh.'},
+  {id:'PH-2026-022',empId:'NV022',name:'Đặng Tuấn Anh',type:'Quên chấm công',occurred:'23/09/2026 08:30',status:'Đã duyệt',content:'Thiết bị chấm công tại cửa chính tạm thời mất kết nối.'},
+];
+
+function ManagerViolationList(){
+  const [rows,setRows]=useState(violationRequests);const [selected,setSelected]=useState<ViolationRequest|null>(null);const [query,setQuery]=useState('');const [kind,setKind]=useState('Tất cả loại vi phạm');const [status,setStatus]=useState('Chờ duyệt');
+  const visible=rows.filter(x=>(!query||`${x.name} ${x.empId}`.toLowerCase().includes(query.toLowerCase()))&&(kind==='Tất cả loại vi phạm'||x.type.includes(kind))&&(status==='Tất cả trạng thái'||x.status===status));
+  const decide=(next:'Đã duyệt'|'Từ chối')=>{if(!selected)return;setRows(v=>v.map(x=>x.id===selected.id?{...x,status:next}:x));setSelected(null)};
+  const typeClass=(type:string)=>type.includes('Đi muộn')?'border-amber-200 bg-amber-50 text-amber-700':type.includes('Quên')?'border-rose-200 bg-rose-50 text-rose-600':'border-orange-200 bg-orange-50 text-orange-700';
+  const statusClass=(value:string)=>value==='Chờ duyệt'?'bg-amber-100 text-amber-700':value==='Đã duyệt'?'bg-emerald-100 text-emerald-700':value==='Từ chối'?'bg-rose-100 text-rose-600':'bg-slate-100 text-slate-600';
+  return <div className="min-h-full space-y-6 bg-[#F8FAFC] p-6">
+    <h1 className="text-2xl font-bold text-slate-900">Danh sách vi phạm</h1>
+    <section className="rounded-xl border border-slate-200 bg-white p-4"><div className="grid gap-3 lg:grid-cols-[minmax(260px,1.5fr)_1fr_1fr_1fr_auto]"><div className="relative"><span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-slate-400">search</span><input value={query} onChange={e=>setQuery(e.target.value)} className="form-input pl-10" placeholder="Tên hoặc mã nhân viên"/></div><select value={kind} onChange={e=>setKind(e.target.value)} className="form-input"><option>Tất cả loại vi phạm</option><option>Đi muộn</option><option>Quên chấm công</option><option>Chưa check-out</option></select><select className="form-input"><option>Tất cả thời gian</option><option>Tháng 09/2026</option></select><select value={status} onChange={e=>setStatus(e.target.value)} className="form-input border-blue-500 font-semibold text-blue-700"><option>Chờ duyệt</option><option>Đã duyệt</option><option>Chưa giải trình</option><option>Từ chối</option><option>Tất cả trạng thái</option></select><button onClick={()=>{setQuery('');setKind('Tất cả loại vi phạm');setStatus('Chờ duyệt')}} className="btn-secondary px-3"><span className="material-symbols-outlined">refresh</span></button></div></section>
+    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white"><div className="overflow-x-auto"><table className="w-full min-w-[900px] text-left"><thead><tr className="table-header">{['STT','Mã NV','Họ tên','Loại vi phạm','Thời gian phát sinh','Trạng thái'].map(x=><th key={x} className="px-5 py-4">{x}</th>)}</tr></thead><tbody className="divide-y divide-slate-100">{visible.map((x,i)=><tr key={x.id} tabIndex={0} onClick={()=>setSelected(x)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' ')setSelected(x)}} className="cursor-pointer text-sm transition hover:bg-blue-50/40"><td className="px-5 py-5 text-slate-400">{String(i+1).padStart(2,'0')}</td><td className="px-5 py-5 font-semibold text-blue-600">{x.empId}</td><td className="px-5 py-5 font-semibold">{x.name}</td><td className="px-5 py-5"><span className={`rounded-md border px-3 py-1.5 text-xs font-semibold ${typeClass(x.type)}`}>● {x.type}</span></td><td className="px-5 py-5 font-mono text-slate-500">{x.occurred}</td><td className="px-5 py-5"><span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${statusClass(x.status)}`}>{x.status}</span></td></tr>)}{!visible.length&&<tr><td colSpan={6} className="px-5 py-16 text-center text-sm text-slate-400">Không có vi phạm phù hợp với bộ lọc</td></tr>}</tbody></table></div><footer className="flex justify-end gap-2 border-t p-4"><button className="h-9 w-9 rounded-lg border text-slate-400">‹</button><button className="h-9 w-9 rounded-lg bg-blue-600 font-semibold text-white">1</button><button className="h-9 w-9 rounded-lg border">2</button><button className="h-9 w-9 rounded-lg border">3</button><button className="h-9 w-9 rounded-lg border">›</button></footer></section>
+    {selected&&<div onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null)}} className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/55 p-4"><section className="w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-2xl"><header className="flex items-start justify-between border-b px-6 py-5"><div><h2 className="text-lg font-bold">Chi tiết yêu cầu chờ duyệt</h2><p className="mt-1 text-sm text-slate-400">{selected.id}　·　{selected.name}</p></div><button onClick={()=>setSelected(null)} className="text-xl text-slate-400">×</button></header><div className="grid grid-cols-2 gap-x-8 gap-y-5 p-6 text-sm"><div><span className="text-xs text-slate-400">Loại phiếu</span><b className="mt-1 block">Giải trình vi phạm</b></div><div><span className="text-xs text-slate-400">Trạng thái</span><span className={`mt-1 block w-fit rounded-full px-3 py-1 text-xs font-semibold ${statusClass(selected.status)}`}>{selected.status}</span></div><div><span className="text-xs text-slate-400">Thời gian phát sinh</span><b className="mt-1 block">{selected.occurred}</b></div><div><span className="text-xs text-slate-400">Loại sai lệch</span><b className="mt-1 block">{selected.type}</b></div><div><span className="text-xs text-slate-400">Nhân viên</span><b className="mt-1 block">{selected.name} ({selected.empId})</b></div><div><span className="text-xs text-slate-400">Người xử lý</span><p className="mt-1">Lê Hoàng Dũng</p></div><div className="col-span-2"><span className="text-xs text-slate-400">Nội dung giải trình</span><p className="mt-2 rounded-xl border bg-slate-50 p-4 leading-6 text-slate-600">{selected.content}</p></div></div><footer className="flex justify-end gap-3 border-t bg-slate-50 px-6 py-4">{selected.status==='Chờ duyệt'&&<><button onClick={()=>decide('Từ chối')} className="btn-danger">Từ chối đơn</button><button onClick={()=>decide('Đã duyệt')} className="btn-primary">Phê duyệt đơn</button></>} {selected.status!=='Chờ duyệt'&&<button onClick={()=>setSelected(null)} className="btn-primary">Đóng</button>}</footer></section></div>}
+  </div>;
+}
 
 const allAlerts: Alert[] = [
   { id: 'AL-001', empId: 'NV002', name: 'Lê Thanh Bình',   dept: 'Phòng IT',  date: '26/10/2023', type: 'Đi muộn',    detail: 'Vào 08:14 (muộn 14 phút)', severity: 'Cảnh báo' },
@@ -220,6 +243,8 @@ export default function GiMSTChMCNg() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [selected, setSelected] = useState<Alert | null>(null);
 
+  if (role === 'MANAGER' && managerView === 'team') return <ManagerViolationList />;
+
   if (role === 'EMPLOYEE' || (role === 'MANAGER' && !managerView)) {
     const mine = [
       { id:'VP-01', date:'18/09/2026', type:'Đi muộn', detail:'Check-in lúc 08:42, muộn 12 phút', status:'Chờ giải trình', note:'' },
@@ -342,7 +367,9 @@ export default function GiMSTChMCNg() {
     );
   }
 
-  if (role === 'MANAGER') return <ManagerAttendanceMonitor/>;
+  if (role === 'MANAGER') return <Navigate to="/dashboard" replace />;
+
+  if (role === 'ADMIN') return <Navigate to="/dashboard" replace />;
 
   const myAlerts = allAlerts;
 
