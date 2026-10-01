@@ -14,7 +14,7 @@ const allData: Row[] = [
 
 export default function BNgCNg() {
   const roleCheck = useRole().role;
-  if (roleCheck === 'MANAGER') return <ManagerTimesheet />;
+  if (roleCheck === 'MANAGER' || roleCheck === 'HR') return <ManagerTimesheet />;
   if (roleCheck === 'ADMIN') return <AdminTimesheetView />;
   const { role } = useRole();
   const [month, setMonth] = useState('2023-10');
@@ -68,7 +68,6 @@ export default function BNgCNg() {
           { label: 'Tổng ngày công', value: myRows.reduce((s,r)=>s+r.workDays,0), color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-500', icon: 'work' },
           { label: 'Số lần đi muộn', value: myRows.reduce((s,r)=>s+r.lateDays,0), color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-500', icon: 'alarm' },
           { label: 'Ngày vắng', value: myRows.reduce((s,r)=>s+r.absentDays,0), color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-500', icon: 'person_off' },
-          { label: 'Giờ tăng ca', value: myRows.reduce((s,r)=>s+r.otHours,0), color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-500', icon: 'more_time' },
         ].map(card => (
           <div key={card.label} className={`card p-5 border-l-4 ${card.border}`}>
             <div className="flex items-center gap-3">
@@ -94,7 +93,6 @@ export default function BNgCNg() {
               <th className="px-4 py-3 text-center">Ngày công</th>
               <th className="px-4 py-3 text-center">Đi muộn</th>
               <th className="px-4 py-3 text-center">Vắng</th>
-              <th className="px-4 py-3 text-center">OT (giờ)</th>
               <th className="px-4 py-3">Trạng thái</th>
               <th className="px-4 py-3 text-center">Thao tác</th>
             </tr>
@@ -133,9 +131,6 @@ export default function BNgCNg() {
                 </td>
                 <td className="px-4 py-3 text-center">
                   <span className={`font-semibold ${row.absentDays > 0 ? 'text-red-600' : 'text-slate-400'}`}>{row.absentDays}</span>
-                </td>
-                <td className="px-4 py-3 text-center">
-                  <span className={`font-semibold ${row.otHours > 0 ? 'text-emerald-600' : 'text-slate-400'}`}>{row.otHours}</span>
                 </td>
                 <td className="px-4 py-3">
                   <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold border ${row.status === 'Hoàn tất' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
@@ -189,7 +184,6 @@ export default function BNgCNg() {
                   { l: 'Ngày công thực', v: `${selectedRow.workDays} ngày` },
                   { l: 'Số lần đi muộn', v: `${selectedRow.lateDays} lần` },
                   { l: 'Ngày vắng', v: `${selectedRow.absentDays} ngày` },
-                  { l: 'Giờ OT', v: `${selectedRow.otHours} giờ` },
                   { l: 'Trạng thái', v: selectedRow.status },
                 ].map(r => (
                   <div key={r.l} className="flex justify-between items-center py-2.5 border-b border-slate-100 last:border-0">
@@ -246,6 +240,7 @@ export default function BNgCNg() {
 
 
 function ManagerTimesheet(){
+ const {role}=useRole();
  const rows=allData.slice(0,4);
  const [detail,setDetail]=useState<{name:string;type:string}|null>(null);
  const [query,setQuery]=useState('');
@@ -262,6 +257,7 @@ function ManagerTimesheet(){
          <span className="material-symbols-outlined text-[18px]">download</span>
          Xuất Excel
        </button>
+       {role==='HR'&&<button onClick={()=>window.alert('Đã chốt bảng công tháng 09/2026')} className="btn-primary whitespace-nowrap"><span className="material-symbols-outlined text-[18px]">lock</span>Chốt bảng công</button>}
      </div>
    </div>
 

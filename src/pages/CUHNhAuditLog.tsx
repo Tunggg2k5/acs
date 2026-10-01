@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 type AuditLog = {
   id: string; time: string; date: string; user: string; userRole: string;
@@ -34,11 +35,14 @@ const moduleIcon: Record<string, string> = {
 };
 
 export default function CUHNhAuditLog() {
-  const [activeTab, setActiveTab] = useState<1 | 2 | 3>(3);
+  const [params,setParams]=useSearchParams();
+  const isAudit = params.get('tab') === 'audit';
+  const [activeTab, setActiveTab] = useState<1 | 2 | 3>(isAudit?3:1);
   const [filterUser, setFilterUser] = useState('');
   const [filterModule, setFilterModule] = useState('Tất cả phân hệ');
   const [filterStatus, setFilterStatus] = useState('ALL');
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
+  useEffect(() => setActiveTab(isAudit ? 3 : 1), [isAudit]);
 
   const visibleLogs = LOGS.filter(l =>
     (filterUser === '' || l.user.toLowerCase().includes(filterUser.toLowerCase()) || l.target.toLowerCase().includes(filterUser.toLowerCase())) &&
@@ -48,7 +52,6 @@ export default function CUHNhAuditLog() {
 
   const tabs = [
     { id: 1 as const, label: 'Cấu hình chung', icon: 'settings' },
-    { id: 2 as const, label: 'Danh mục dùng chung', icon: 'category' },
     { id: 3 as const, label: 'Audit Log', icon: 'history' },
   ];
 
@@ -58,8 +61,8 @@ export default function CUHNhAuditLog() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">Cấu hình &amp; Audit Log</h1>
-          <p className="mt-1 text-sm text-slate-500">Quản lý cấu hình hệ thống, danh mục dùng chung và nhật ký thao tác vận hành</p>
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">{isAudit ? 'Audit Log' : 'Cấu hình hệ thống'}</h1>
+          <p className="mt-1 text-sm text-slate-500">{isAudit ? 'Theo dõi lịch sử truy cập và thay đổi dữ liệu trong hệ thống.' : 'Quản lý các tham số vận hành chung của hệ thống ACS.'}</p>
         </div>
       </div>
 
@@ -67,19 +70,19 @@ export default function CUHNhAuditLog() {
       <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
 
         {/* Tabs */}
-        <div className="flex border-b border-slate-200 px-4">
+        {false && <div className="flex border-b border-slate-200 px-4">
           {tabs.map(t => (
             <button
               key={t.id}
               type="button"
-              onClick={() => setActiveTab(t.id)}
+              onClick={() => {setActiveTab(t.id);setParams(t.id===3?{tab:'audit'}:{})}}
               className={`h-12 px-5 flex items-center gap-2 text-sm font-medium border-b-2 transition-colors ${activeTab === t.id ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
             >
               <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
               {t.label}
             </button>
           ))}
-        </div>
+        </div>}
 
         {/* Tab 1: Config */}
         {activeTab === 1 && (
@@ -96,6 +99,8 @@ export default function CUHNhAuditLog() {
                 { l: 'Thời gian khóa tài khoản (phút)', v: '30', icon: 'lock_clock' },
                 { l: 'Múi giờ hệ thống', v: 'Asia/Ho_Chi_Minh (UTC+7)', icon: 'public' },
                 { l: 'Số ngày nghỉ phép năm mặc định', v: '12 ngày', icon: 'event_available' },
+                { l: 'Tự động đăng xuất (Session Timeout)', v: '60 phút', icon: 'timer' },
+                { l: 'Hạn nộp đơn nghỉ trước ca', v: '24 giờ', icon: 'event' },
               ].map(cfg => (
                 <div key={cfg.l} className="flex flex-col gap-1.5">
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">{cfg.l}</label>

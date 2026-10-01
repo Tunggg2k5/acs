@@ -61,16 +61,11 @@ export default function IUChNhCNg() {
             <span className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Chấm công · Thao tác nghiệp vụ</span>
           </div>
           <h1 className="page-title">Điều chỉnh chấm công</h1>
-          <p className="mt-1 text-sm text-slate-500">HR/Admin can thiệp sửa giờ vào/ra, bổ sung ngày công khi máy lỗi hoặc có xác nhận bằng văn bản hợp lệ.</p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
           <button type="button" onClick={()=>window.alert('Đã xuất nhật ký điều chỉnh')} className="btn-secondary">
             <span className="material-symbols-outlined text-[18px]">download</span>
             Xuất nhật ký
-          </button>
-          <button type="button" onClick={() => setActiveModal('history')} className="btn-secondary">
-            <span className="material-symbols-outlined text-[18px]">history</span>
-            Lịch sử can thiệp
           </button>
         </div>
       </div>
@@ -96,13 +91,6 @@ export default function IUChNhCNg() {
               <option value="Chờ xử lý">Chờ xử lý</option>
             </select>
           </div>
-          <div>
-            <button type="button" onClick={() => { setFilterEmp(''); setFilterStatus('ALL'); }}
-              className="btn-secondary">
-              <span className="material-symbols-outlined text-[18px]">refresh</span>
-              Đặt lại
-            </button>
-          </div>
         </div>
       </div>
 
@@ -121,13 +109,12 @@ export default function IUChNhCNg() {
                 <th className="px-4 py-3 text-center text-blue-600">Ra chỉnh</th>
                 <th className="px-4 py-3">Người chỉnh</th>
                 <th className="px-4 py-3">Trạng thái</th>
-                <th className="px-4 py-3 text-center">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {visible.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="py-16">
+                  <td colSpan={9} className="py-16">
                     <div className="flex flex-col items-center gap-3 text-center">
                       <span className="material-symbols-outlined text-slate-300 text-5xl">inbox</span>
                       <p className="text-sm text-slate-400">Không có bản ghi phù hợp</p>
@@ -135,7 +122,7 @@ export default function IUChNhCNg() {
                   </td>
                 </tr>
               ) : visible.map(r => (
-                <tr key={r.empId + r.date} className="text-sm hover:bg-slate-50 transition">
+                <tr key={r.empId + r.date} onClick={()=>{setSelected(r);setActiveModal(r.status==='Chờ xử lý'?'adjust':'detail')}} className="cursor-pointer text-sm hover:bg-slate-50 transition">
                   <td className="px-4 py-3 font-semibold text-blue-600">{r.empId}</td>
                   <td className="px-4 py-3">
                     <div className="font-semibold text-slate-900">{r.name}</div>
@@ -161,17 +148,6 @@ export default function IUChNhCNg() {
                     <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold border ${r.status === 'Đã can thiệp' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
                       {r.status}
                     </span>
-                  </td>
-                  <td className="px-4 py-3 text-center">
-                    <div className="flex items-center justify-center gap-1">
-                      <button onClick={() => { setSelected(r); setActiveModal('detail'); }} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition" title="Chi tiết">
-                        <span className="material-symbols-outlined text-[18px]">visibility</span>
-                      </button>
-                      <button onClick={() => { setSelected(r); setActiveModal('adjust'); }} className="inline-flex items-center gap-1 rounded-lg bg-blue-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-blue-700 transition" title="Can thiệp">
-                        <span className="material-symbols-outlined text-[14px]">edit</span>
-                        Can thiệp
-                      </button>
-                    </div>
                   </td>
                 </tr>
               ))}

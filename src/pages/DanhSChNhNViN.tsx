@@ -27,15 +27,22 @@ const ALL_EMPLOYEES: Employee[] = [
 const MANAGER_TEAM = ['NV001', 'NV002', 'NV009'];
 
 const statusColor = (s: string) => {
-  if (s === 'Đang làm việc') return 'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200';
-  if (s === 'Tạm nghỉ') return 'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200';
-  return 'inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200';
+  if (s === 'Đang làm việc') return 'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold bg-teal-100 text-teal-800';
+  if (s === 'Tạm nghỉ') return 'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold bg-indigo-100 text-indigo-700';
+  return 'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-semibold bg-slate-200 text-slate-700';
 };
 
 function InfoCard({label,value,sub}:{label:string;value:string;sub?:string}){return <div className="rounded-xl bg-slate-50 border border-slate-100 p-4"><p className="text-xs uppercase tracking-wider text-slate-500 font-semibold">{label}</p><b className="mt-2 block text-sm text-slate-900">{value}</b>{sub&&<p className="mt-1 text-xs text-slate-500">{sub}</p>}</div>}
 function InfoValue({label,value}:{label:string;value:string}){return <div><p className="text-xs text-slate-500">{label}</p><b className="mt-1 block text-sm text-slate-900">{value}</b></div>}
 function EditSection({title,children}:{title:string;children:React.ReactNode}){return <section className="rounded-xl bg-white border border-slate-200 p-5"><h3 className="mb-4 text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">{title}</h3>{children}</section>}
 function Field({label,wide,children}:{label:string;wide?:boolean;children:React.ReactElement}){return <label className={`block text-sm font-semibold text-slate-700 ${wide?'col-span-3':''}`}>{label}{React.cloneElement(children as React.ReactElement<any>,{className:'mt-1.5 h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 disabled:bg-slate-100 disabled:text-slate-400'})}</label>}
+
+function EmployeeDirectory({employees}:{employees:Employee[]}){
+ const [query,setQuery]=useState('');const[dept,setDept]=useState('ALL');const[title,setTitle]=useState('ALL');const[presence,setPresence]=useState('ALL');
+ const presenceOf=(e:Employee)=>e.id==='NV002'?'Vắng mặt':'Đã có mặt';
+ const rows=employees.filter(e=>(dept==='ALL'||e.dept===dept)&&(title==='ALL'||e.title===title)&&(presence==='ALL'||presenceOf(e)===presence)&&`${e.name} ${e.email} ${e.id}`.toLowerCase().includes(query.toLowerCase()));
+ return <div className="min-h-full space-y-5 bg-[#f8fafc] p-6"><header className="flex items-center justify-between"><h1 className="text-2xl font-bold">Danh sách nhân viên</h1><button onClick={()=>window.alert('Đã xuất danh sách nhân viên')} className="btn-secondary"><span className="material-symbols-outlined text-[16px]">download</span>Xuất Excel</button></header><section className="rounded-xl border bg-white p-4 shadow-sm"><div className="grid gap-4 md:grid-cols-4"><label className="text-[11px] font-bold uppercase text-slate-600">Tìm kiếm nhân viên<div className="relative mt-2"><span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[15px] text-slate-400">search</span><input value={query} onChange={e=>setQuery(e.target.value)} className="form-input pl-9" placeholder="Tên, mã nhân viên, email..."/></div></label><label className="text-[11px] font-bold uppercase text-slate-600">Phòng ban / Đơn vị<select value={dept} onChange={e=>setDept(e.target.value)} className="form-input mt-2"><option value="ALL">Khối Công nghệ</option>{DEPARTMENTS.map(x=><option key={x}>{x}</option>)}</select></label><label className="text-[11px] font-bold uppercase text-slate-600">Chức vụ<select value={title} onChange={e=>setTitle(e.target.value)} className="form-input mt-2"><option value="ALL">Tất cả chức vụ</option>{TITLES.map(x=><option key={x}>{x}</option>)}</select></label><label className="text-[11px] font-bold uppercase text-slate-600">Trạng thái<select value={presence} onChange={e=>setPresence(e.target.value)} className="form-input mt-2"><option value="ALL">Đang làm việc</option><option>Đã có mặt</option><option>Vắng mặt</option></select></label></div></section><section className="overflow-hidden rounded-xl border bg-white shadow-sm"><div className="overflow-x-auto"><table className="w-full min-w-[820px] text-left"><thead className="bg-slate-50 text-[11px] uppercase text-slate-500"><tr>{['Họ tên','Phòng ban','Chức vụ','Liên hệ','Trạng thái'].map(x=><th key={x} className="px-6 py-4">{x}</th>)}</tr></thead><tbody className="divide-y">{rows.map(e=><tr key={e.id} className="text-sm hover:bg-slate-50"><td className="px-6 py-4"><div className="flex items-center gap-3"><span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">{e.name.split(' ').at(-1)?.[0]}</span><b>{e.name}</b></div></td><td className="px-6 py-4 text-slate-600">{e.dept}</td><td className="px-6 py-4 text-slate-700">{e.title}</td><td className="px-6 py-4"><span className="block text-xs">{e.email}</span><span className="text-xs text-slate-400">{e.phone}</span></td><td className="px-6 py-4"><span className={`rounded-full border px-3 py-1 text-xs ${presenceOf(e)==='Đã có mặt'?'border-emerald-200 bg-emerald-50 text-emerald-600':'border-rose-200 bg-rose-50 text-rose-600'}`}>{presenceOf(e)}</span></td></tr>)}</tbody></table></div><footer className="flex items-center justify-between border-t bg-slate-50 px-5 py-4 text-xs text-slate-500"><span>Hiển thị 1-{rows.length} trên {rows.length} nhân viên</span><div><button className="h-8 w-8 text-slate-300">‹</button><button className="h-8 w-8 rounded bg-blue-600 text-white">1</button><button className="h-8 w-8 text-slate-300">›</button></div></footer></section></div>
+}
 
 export default function DanhSChNhNViN() {
   const { role } = useRole();
@@ -86,18 +93,19 @@ export default function DanhSChNhNViN() {
     ? [...new Set(MANAGER_TEAM.map(id => employees.find(e => e.id === id)?.dept).filter(Boolean))]
     : DEPARTMENTS;
 
-  if (role === 'MANAGER') return <ManagerEmployeeDirectory employees={baseList}/>;
+  return <EmployeeDirectory employees={baseList}/>;
 
+  /* Legacy role-specific administration view retained below for reference. */
   return (
     <div className="flex flex-col gap-6 p-6 bg-[#F8FAFC] min-h-full">
       {/* Page Header */}
-      <div className="mb-2 flex items-center justify-between flex-wrap gap-4">
+      <div className="mb-2 flex items-center justify-between flex-wrap gap-4 rounded-xl border bg-white p-4 shadow-sm">
         <div>
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-xl font-bold text-slate-900 tracking-tight">Danh sách nhân viên</h1>
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-200">
               <span className="material-symbols-outlined text-[14px]">shield_person</span>
-              {role === 'MANAGER' ? 'Phạm vi: Khối Công nghệ' : 'Phạm vi: Toàn công ty (Admin/HR)'}
+              {role === 'MANAGER' ? 'Phạm vi: Khối Công nghệ' : role==='EMPLOYEE'?'Danh bạ nội bộ':'Phạm vi: Toàn công ty (Admin/HR)'}
             </span>
           </div>
           <p className="text-sm text-slate-500 mt-1">
@@ -162,17 +170,16 @@ export default function DanhSChNhNViN() {
         <div className="overflow-x-auto">
           <table className="w-full text-left min-w-[900px]">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200">
-                <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider w-14">STT</th>
-                <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Mã NV</th>
-                <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Họ tên</th>
-                {role !== 'MANAGER' && <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Account</th>}
-                <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Phòng ban</th>
-                <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Chức vụ</th>
-                {role !== 'MANAGER' && <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Manager</th>}
-                {role !== 'MANAGER' && <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Trạng thái</th>}
-                {role === 'MANAGER' && <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Liên hệ</th>}
-                <th className="py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center w-24">Chi tiết</th>
+              <tr className="border-b border-blue-900 bg-[#203f86] text-white">
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider w-14">STT</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Mã NV</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Họ tên</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Account</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Phòng ban</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Chức vụ</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Manager</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider">Trạng thái</th>
+                <th className="py-3 px-4 text-xs font-semibold uppercase tracking-wider text-center w-24">Chức năng</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -192,21 +199,15 @@ export default function DanhSChNhNViN() {
                       className="text-sm font-semibold text-blue-600 hover:underline">{emp.id}</button>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-xs font-bold text-blue-600 shrink-0">
-                        {emp.name.split(' ').slice(-1)[0].charAt(0)}
-                      </div>
-                      <span className="font-semibold text-slate-900">{emp.name}</span>
-                    </div>
+                    <span className="font-semibold text-slate-900">{emp.name}</span>
                   </td>
-                  {role !== 'MANAGER' && <td className="py-3 px-4 font-mono text-slate-500">{emp.account}</td>}
+                  <td className="py-3 px-4 font-mono text-slate-500">{emp.account}</td>
                   <td className="py-3 px-4 text-slate-600">{emp.dept}</td>
                   <td className="py-3 px-4 text-slate-700">{emp.title}</td>
-                  {role !== 'MANAGER' && <td className="py-3 px-4 text-slate-500">{emp.manager}</td>}
-                  {role !== 'MANAGER' && <td className="py-3 px-4">
+                  <td className="py-3 px-4 text-slate-500">{emp.manager}</td>
+                  <td className="py-3 px-4">
                     <span className={statusColor(emp.status)}>{emp.status}</span>
-                  </td>}
-                  {role === 'MANAGER' && <td className="py-3 px-4"><p className="text-slate-700">{emp.phone}</p><p className="text-xs text-slate-400">{emp.email}</p></td>}
+                  </td>
                   <td className="py-3 px-4 text-center">
                     <div className="flex items-center justify-center gap-1">
                       <button type="button" title="Xem chi tiết" onClick={() => { setSelected(emp); setActiveModal('view'); }}

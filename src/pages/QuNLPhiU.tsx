@@ -40,11 +40,13 @@ const ticketStatusClass=(status:SharedTicket['status'])=>status==='Đã duyệt'
 
 export default function QuNLPhiU(){
  const {role}=useRole(); const location=useLocation(); const [tickets,setTickets]=useState<SharedTicket[]>(loadTickets); const [modal,setModal]=useState<Modal>(null); const [tab,setTab]=useState('Tất cả'); const [period,setPeriod]=useState<'Buổi sáng'|'Buổi chiều'|'Cả ngày'>('Cả ngày'); const [selected,setSelected]=useState<SharedTicket|null>(null);
+ const scope=new URLSearchParams(location.search).get('scope');
  if(role==='EMPLOYEE') return <EmployeeTickets/>;
- if(role==='MANAGER'&&new URLSearchParams(location.search).get('scope')==='mine') return <EmployeeTickets ownerName="Lê Hoàng Dũng" ownerDepartment="Phòng IT"/>;
+ if(role==='MANAGER'&&scope==='mine') return <EmployeeTickets ownerName="Lê Hoàng Dũng" ownerDepartment="Phòng IT"/>;
+ if(role==='HR'&&scope==='mine') return <EmployeeTickets ownerName="Trần Thị Mai" ownerDepartment="Phòng Nhân sự"/>;
  const close=()=>setModal(null);
  const send=(kind:TicketKind,form:HTMLFormElement)=>{const d=new FormData(form);let fields:Record<string,string>={};if(kind==='Nghỉ phép'){const start=String(d.get('start'));const end=period==='Cả ngày'?String(d.get('end')):start;fields={'Từ ngày':formatDate(start),'Đến ngày':formatDate(end),'Thời lượng':period,'Ngày công bị trừ':period==='Cả ngày'?'1 công/ngày':'0,5 công','Chế độ':String(d.get('mode')),'Lý do':String(d.get('reason')),'Lý do khác':String(d.get('other')||'—'),'Ghi chú':String(d.get('note')||'—'),'Người xử lý':String(d.get('approver'))};}else if(kind==='Giải trình'){fields={'Ngày giải trình':formatDate(String(d.get('date'))),'Loại sai lệch':String(d.get('issue')),'Nội dung':String(d.get('content')),'Người xử lý':String(d.get('approver'))};}else{fields={tripType:String(d.get('tripType')),'Phương tiện':String(d.get('transport')),'Nơi đi':String(d.get('from')),'Điểm đến':String(d.get('to')),'Từ ngày':String(d.get('start')),'Đến ngày':String(d.get('end')),'Lý do':String(d.get('reason'))};}const next=[{id:`PH-${Date.now().toString().slice(-6)}`,kind,employee:role==='MANAGER'?'Lê Hoàng Dũng':'Trần Thị Mai',status:'Chờ duyệt' as const,createdAt:new Date().toLocaleDateString('vi-VN'),fields},...tickets];setTickets(next);saveTickets(next);close();};
- if(role==='MANAGER'||role==='ADMIN') return <ManagerView tickets={tickets} setTickets={setTickets} selected={selected} setSelected={setSelected} canCreate={role==='MANAGER'} onCreateSubmit={send}/>;
+ if(role==='MANAGER'||role==='ADMIN'||(role==='HR'&&scope==='team')) return <ManagerView tickets={tickets} setTickets={setTickets} selected={selected} setSelected={setSelected} canCreate={role==='MANAGER'} onCreateSubmit={send}/>;
  const shown=tickets.filter(t=>tab==='Tất cả'||t.status===tab);
  return (
   <div className="flex flex-col gap-6 p-6">
@@ -253,6 +255,8 @@ function Detail({ticket,close}:{ticket:SharedTicket;close:()=>void}){
   );
 }
 
+function TicketField({label,value,sub,blue,box}:{label:string;value:string;sub?:string;blue?:boolean;box?:boolean}){return <div><p className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">{label}</p><p className={`mt-1.5 text-sm font-semibold ${blue?'inline-flex rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-blue-700':box?'rounded-xl border bg-white p-4 font-normal leading-6 text-slate-700':'text-slate-800'}`}>{value}</p>{sub&&<p className={`mt-1 text-xs ${sub.startsWith('●')?'text-rose-500':'text-blue-600'}`}>{sub}</p>}</div>}
+
 function ManagerView({tickets,setTickets,selected,setSelected,canCreate,onCreateSubmit}:{tickets:SharedTicket[];setTickets:(x:SharedTicket[])=>void;selected:SharedTicket|null;setSelected:(x:SharedTicket|null)=>void;canCreate:boolean;onCreateSubmit:(kind:TicketKind,form:HTMLFormElement)=>void}){
  const location=useLocation();
  const scope:'team'|'mine'=canCreate&&new URLSearchParams(location.search).get('scope')==='mine'?'mine':'team';
@@ -261,6 +265,8 @@ function ManagerView({tickets,setTickets,selected,setSelected,canCreate,onCreate
  const [query,setQuery]=useState('');
  const [date,setDate]=useState('');
  const [createKind,setCreateKind]=useState<FormKind|null>(null);
+ const [rejectOpen,setRejectOpen]=useState(false);
+ const [rejectReason,setRejectReason]=useState('');
  const [teamTickets,setTeamTickets]=useState<SharedTicket[]>([
   {id:'QL-001',kind:'Nghỉ phép',employee:'Nguyễn Văn An',status:'Chờ duyệt',createdAt:'22/09/2026',fields:{'Từ ngày':'22/09/2026','Đến ngày':'23/09/2026','Lý do':'Nghỉ phép thường niên giải quyết việc gia đình'}},
   {id:'QL-002',kind:'Công tác dài ngày',employee:'Lê Thanh Bình',status:'Chờ duyệt',createdAt:'21/09/2026',fields:{'Từ ngày':'21/09/2026','Đến ngày':'25/09/2026','Lý do':'Bàn giao hệ thống & đào tạo Q3'}},
@@ -443,28 +449,22 @@ function ManagerView({tickets,setTickets,selected,setSelected,canCreate,onCreate
           <header className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
             <div>
               <div className="flex items-center gap-3"><h2 className="text-xl font-bold text-slate-900">{selected.employee==='Lê Hoàng Dũng'?'Chi tiết phiếu của tôi':'Chi tiết yêu cầu chờ duyệt'}</h2>{selected.employee!=='Lê Hoàng Dũng'&&<span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">● TRẠNG THÁI: {selected.status.toUpperCase()}</span>}</div>
-              <p className="mt-1 text-sm text-slate-500"><b className="text-blue-600">{selected.id}</b>　•　{selected.employee}</p>
+              <p className="mt-1 text-sm font-semibold text-slate-700">{selected.employee}</p>
+              <p className="mt-0.5 text-xs text-slate-500">Phòng: Kinh doanh　•　Chức vụ: Nhân viên chính thức　•　Mã phiếu: {selected.id}</p>
             </div>
             <button onClick={()=>setSelected(null)} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
               <span className="material-symbols-outlined text-[18px]">close</span>
             </button>
           </header>
-          <div className="grid max-h-[68vh] grid-cols-2 gap-3 overflow-y-auto p-6">
-           {selected.employee!=='Lê Hoàng Dũng'&&<><h3 className="col-span-2 border-l-4 border-blue-600 pl-3 text-sm font-bold uppercase">Thông tin phiếu</h3></>}
-            <div className="rounded-xl bg-slate-50 p-4">
-              <span className="text-xs text-slate-500 uppercase tracking-wider">Loại phiếu</span>
-              <p className="mt-1 text-sm font-semibold text-slate-900">{selected.kind}</p>
-            </div>
-            <div className="rounded-xl bg-slate-50 p-4">
-              <span className="text-xs text-slate-500 uppercase tracking-wider">Trạng thái</span>
-              <p className="mt-1 text-sm font-semibold text-slate-900">{selected.status}</p>
-            </div>
-            {Object.entries(selected.fields).map(([k,v])=>(
-              <div key={k} className="rounded-xl bg-slate-50 p-4">
-                <span className="text-xs text-slate-500 uppercase tracking-wider">{{tripType:'Loại công tác',transport:'Phương tiện',from:'Nơi đi',to:'Điểm đến',start:'Từ ngày / giờ',end:'Đến ngày / giờ',part:'Buổi nghỉ',mode:'Chế độ',reason:'Lý do / Mục đích',complaintType:'Loại vi phạm',date:'Ngày khiếu nại',actualTime:'Thời gian thực tế'}[k]||k}</span>
-                <p className="mt-1 whitespace-pre-wrap text-sm font-semibold text-slate-900">{['start','end'].includes(k)&&v.includes('T')?v.replace('T',' lúc '):v}</p>
-              </div>
-            ))}
+          <div className="max-h-[68vh] overflow-y-auto p-6">
+            <h3 className="mb-4 border-l-4 border-blue-600 pl-3 text-sm font-bold uppercase">Thông tin phiếu</h3>
+            {selected.kind.includes('Công tác')||selected.kind==='Công tác' ? (
+              <div className="rounded-2xl border bg-slate-50 p-5"><div className="grid gap-5 sm:grid-cols-3"><TicketField label="Loại phiếu" value="Công tác" blue/><TicketField label="Loại công tác" value={selected.fields.tripType||selected.kind}/><TicketField label="Phương tiện di chuyển" value={selected.fields.transport||'Xe công ty đưa đón'}/></div><div className="my-4 border-t"/><TicketField label="Hành trình" value={`${selected.fields.from||'Văn phòng chính (Hà Nội)'}  →  ${selected.fields.to||'Bắc Ninh (Nhà máy KCN Quế Võ)'}`}/><div className="mt-4"><TicketField label="Thời gian" value={`Từ ${selected.fields.start||selected.fields['Từ ngày']||'08:00, 28/09/2026'} - Đến ${selected.fields.end||selected.fields['Đến ngày']||'17:30, 28/09/2026'}`}/></div><div className="my-4 border-t"/><TicketField label="Mục đích / Nội dung" value={selected.fields.reason||selected.fields['Lý do']||'Khảo sát máy quét thẻ nhân sự và kiểm tra đường truyền mạng chấm công nội bộ.'} box/></div>
+            ) : selected.kind.includes('Giải trình') ? (
+              <div className="rounded-2xl border bg-slate-50 p-5"><div className="grid gap-5 sm:grid-cols-2"><TicketField label="Loại phiếu" value="Giải trình khiếu nại" blue/><TicketField label="Ngày khiếu nại" value={selected.fields.date||selected.fields['Ngày giải trình']||'18/09/2026'}/></div><div className="my-4 border-t"/><div className="grid gap-4 sm:grid-cols-2"><TicketField label="Thời gian hệ thống" value={selected.fields.systemTime||'08:42:00'} sub="● Đi muộn 12 phút - Ca sáng 08:30"/><TicketField label="Thời gian thực tế (khai báo từ nhân viên)" value={selected.fields.actualTime||'08:28:00'}/></div><div className="my-4 border-t"/><TicketField label="Lý do / Nội dung giải trình" value={selected.fields.content||selected.fields['Nội dung']||'Do sự cố máy quét vân tay, nhân viên đã xếp hàng quẹt lại nhiều lần nhưng thiết bị không phản hồi.'} box/></div>
+            ) : (
+              <div className="rounded-2xl border bg-slate-50 p-5"><div className="grid gap-5 sm:grid-cols-[140px_180px_1fr]"><TicketField label="Loại phiếu" value="Nghỉ phép" blue/><TicketField label="Hình thức nghỉ" value={selected.fields.mode||selected.fields['Chế độ']||'Nghỉ phép năm'}/><TicketField label="Thời gian nghỉ" value={`Từ ${selected.fields.start||selected.fields['Từ ngày']||'08:00, 26/09/2026'} - Đến ${selected.fields.end||selected.fields['Đến ngày']||'17:00, 27/09/2026'}`} sub={selected.fields['Thời lượng']?`Tổng: ${selected.fields['Thời lượng']}`:'Tổng: 1.5 ngày'}/></div><div className="my-4 border-t"/><TicketField label="Lý do" value={selected.fields.reason||selected.fields['Lý do']||'Giải quyết việc gia đình cá nhân.'} box/></div>
+            )}
           </div>
           <footer className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50/70 px-6 py-4">
             {selected.employee==='Lê Hoàng Dũng' ? (
@@ -479,7 +479,7 @@ function ManagerView({tickets,setTickets,selected,setSelected,canCreate,onCreate
               </>
             ) : (
               <>
-                <button onClick={()=>decide('Từ chối')} className="btn-danger">
+                <button onClick={()=>setRejectOpen(true)} className="btn-danger">
                   <span className="material-symbols-outlined text-[18px]">close</span>
                   Từ chối đơn
                 </button>
@@ -493,6 +493,8 @@ function ManagerView({tickets,setTickets,selected,setSelected,canCreate,onCreate
         </div>
       </div>
     )}
+    {rejectOpen&&selected&&<div onMouseDown={e=>{if(e.target===e.currentTarget)setRejectOpen(false)}} className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-900/55 p-4"><section role="dialog" className="w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-2xl"><header className="flex items-center justify-between border-b px-6 py-5"><div><h2 className="text-lg font-bold">Nhập lý do từ chối đơn</h2><p className="mt-1 text-xs text-slate-500">• {selected.employee}</p></div><button onClick={()=>setRejectOpen(false)}><span className="material-symbols-outlined text-slate-400">close</span></button></header><div className="p-6"><div className="mb-2 flex justify-between text-xs font-semibold text-slate-600"><span>Lý do từ chối <b className="text-red-500">*</b></span><span className="font-normal text-slate-400">{rejectReason.length} / 300 ký tự</span></div><textarea autoFocus maxLength={300} rows={6} value={rejectReason} onChange={e=>setRejectReason(e.target.value)} className="form-input resize-none"/></div><footer className="flex justify-end gap-3 border-t bg-slate-50 px-6 py-4"><button onClick={()=>setRejectOpen(false)} className="btn-secondary">Hủy</button><button disabled={!rejectReason.trim()} onClick={()=>{decide('Từ chối');setRejectOpen(false);setRejectReason('')}} className="btn-danger disabled:opacity-50">Xác nhận từ chối</button></footer></section></div>}
   </div>
  );
 }
+

@@ -4,19 +4,37 @@ import { useRole } from '../context/RoleContext';
 
 type Meeting = {
   id: string; title: string; host: string; participants: string[]; room: string;
-  date: string; start: string; end: string; status: 'Sắp diễn ra' | 'Đang diễn ra' | 'Đã kết thúc';
+  date: string; start: string; end: string; status: 'Chờ xác nhận' | 'Chưa diễn ra' | 'Đã diễn ra' | 'Đã hủy' | 'Đã từ chối';
 };
 
-const INITIAL_MEETINGS: Meeting[] = [
-  { id:'LH-01',title:'Đào tạo quy trình chấm công',host:'Lê Hoàng Dũng',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng đào tạo tầng 4',date:'21/10/2024',start:'10:00',end:'11:30',status:'Sắp diễn ra' },
-  { id:'LH-02',title:'Họp tiến độ dự án ACS',host:'Nguyễn Bình Chương',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Lotus 01',date:'22/10/2024',start:'09:00',end:'10:00',status:'Sắp diễn ra' },
-  { id:'LH-03',title:'Rà soát ngân sách tháng 10',host:'Nguyễn Văn An',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Orchid 02',date:'22/10/2024',start:'14:00',end:'15:30',status:'Sắp diễn ra' },
-  { id:'LH-04',title:'Họp triển khai tính năng chấm công AI',host:'Trần Minh Quân',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Rose 03',date:'22/10/2024',start:'15:30',end:'16:30',status:'Sắp diễn ra' },
-  { id:'LH-05',title:'Đánh giá hiệu suất quý III',host:'Hoàng Thùy Linh',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Lotus 02',date:'23/10/2024',start:'09:00',end:'11:00',status:'Sắp diễn ra' },
-  { id:'LH-06',title:'Phỏng vấn ứng viên Frontend Dev',host:'Nguyễn Văn Hùng',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng phỏng vấn 1',date:'23/10/2024',start:'14:00',end:'15:00',status:'Sắp diễn ra' },
-  { id:'LH-07',title:'Họp giao ban bộ phận Kỹ thuật',host:'Phạm Minh Tuấn',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Orchid 01',date:'21/10/2024',start:'08:30',end:'09:30',status:'Đã kết thúc' },
-  { id:'LH-08',title:'Tổng kết Sprint 14 & Planning Sprint 15',host:'Lê Hoàng Dũng',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Online - Google Meet',date:'20/10/2024',start:'16:00',end:'17:30',status:'Đã kết thúc' },
+const MEETING_STAFF = [
+  {name:'Lê Hoàng Dũng',email:'dung.le@acs.vn',dept:'Trưởng phòng IT',initials:'LD',color:'bg-blue-600'},
+  {name:'Trần Thị Mai',email:'mai.tran@acs.vn',dept:'Phó phòng IT',initials:'TM',color:'bg-violet-500'},
+  {name:'Nguyễn Văn Hùng',email:'hung.nguyen@acs.vn',dept:'Kỹ sư phần mềm IT',initials:'NH',color:'bg-emerald-500'},
+  {name:'Đỗ Quốc Bảo',email:'bao.do@acs.vn',dept:'Frontend Developer - IT',initials:'QB',color:'bg-blue-500'},
+  {name:'Bùi Thanh Tùng',email:'tung.bui@acs.vn',dept:'DevOps Engineer - IT',initials:'TT',color:'bg-amber-500'},
+  {name:'Lê Thị Hoa',email:'hoa.le@acs.vn',dept:'Chuyên viên QA - IT',initials:'TH',color:'bg-rose-500'},
+  {name:'Hoàng Thùy Linh',email:'linh.hoang@acs.vn',dept:'Trưởng phòng Nhân sự - HR',initials:'TL',color:'bg-indigo-500'},
 ];
+
+const INITIAL_MEETINGS: Meeting[] = [
+  { id:'LH-01',title:'Đào tạo quy trình chấm công',host:'Lê Hoàng Dũng',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng đào tạo tầng 4',date:'21/10/2024',start:'10:00',end:'11:30',status:'Chưa diễn ra' },
+  { id:'LH-02',title:'Họp tiến độ dự án ACS',host:'Nguyễn Bình Chương',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Lotus 01',date:'22/10/2024',start:'09:00',end:'10:00',status:'Chưa diễn ra' },
+  { id:'LH-03',title:'Rà soát ngân sách tháng 10',host:'Nguyễn Văn An',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Orchid 02',date:'22/10/2024',start:'14:00',end:'15:30',status:'Chưa diễn ra' },
+  { id:'LH-04',title:'Họp triển khai tính năng chấm công AI',host:'Trần Minh Quân',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Rose 03',date:'22/10/2024',start:'15:30',end:'16:30',status:'Chưa diễn ra' },
+  { id:'LH-05',title:'Đánh giá hiệu suất quý III',host:'Hoàng Thùy Linh',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Lotus 02',date:'23/10/2024',start:'09:00',end:'11:00',status:'Chưa diễn ra' },
+  { id:'LH-06',title:'Phỏng vấn ứng viên Frontend Dev',host:'Nguyễn Văn Hùng',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng phỏng vấn 1',date:'23/10/2024',start:'14:00',end:'15:00',status:'Chưa diễn ra' },
+  { id:'LH-07',title:'Họp giao ban bộ phận Kỹ thuật',host:'Phạm Minh Tuấn',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Orchid 01',date:'21/10/2024',start:'08:30',end:'09:30',status:'Đã diễn ra' },
+  { id:'LH-08',title:'Tổng kết Sprint 14 & Planning Sprint 15',host:'Lê Hoàng Dũng',participants:['Trần Thị Mai','Nguyễn Văn Hùng','Phạm Minh Tuấn'],room:'Phòng họp Polaris (Tầng 4)',date:'20/10/2024',start:'16:00',end:'17:30',status:'Đã hủy' },
+];
+
+const GUEST_MEETINGS_KEY = 'acs_guest_meetings';
+const loadGuestMeetings = (): Meeting[] => {
+  try { return JSON.parse(localStorage.getItem(GUEST_MEETINGS_KEY) || '[]') as Meeting[] } catch { return [] }
+};
+const saveGuestMeeting = (meeting: Meeting) => {
+  localStorage.setItem(GUEST_MEETINGS_KEY, JSON.stringify([meeting, ...loadGuestMeetings()]));
+};
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return (
@@ -122,7 +140,7 @@ function GuestBooking() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-5 py-8 lg:py-12">
+      <div className="mx-auto max-w-7xl px-5 py-8 lg:py-10">
         <div className="mb-8 flex flex-col justify-between gap-5 md:flex-row md:items-end">
           <div>
             <span className="badge-blue uppercase tracking-wider">DÀNH CHO KHÁCH</span>
@@ -146,7 +164,7 @@ function GuestBooking() {
           </div>
         )}
 
-        <form onSubmit={e => { e.preventDefault(); setDone(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="grid items-start gap-6 xl:grid-cols-[1fr_340px]">
+        <form onSubmit={e => { e.preventDefault(); const f=new FormData(e.currentTarget); const start=String(f.get('start')); const end=String(f.get('end')); const host=String(f.get('host')).split(' — ')[0]; saveGuestMeeting({id:`LH-KH-${Date.now().toString().slice(-4)}`,title:String(f.get('purpose')),host,participants:[String(f.get('guestName'))],room:String(f.get('room')),date:start.slice(0,10).split('-').reverse().join('/'),start:start.slice(11),end:end.slice(11),status:'Chờ xác nhận'}); setDone(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="grid items-start gap-8 xl:grid-cols-[1fr_385px]">
           <div className="space-y-6">
             <section className="card p-5 md:p-7">
               <div className="mb-6 flex items-center gap-3">
@@ -158,7 +176,7 @@ function GuestBooking() {
                   <p className="mt-0.5 text-xs text-slate-500">Cho cán bộ biết bạn muốn trao đổi vấn đề gì</p>
                 </div>
               </div>
-              <Field label="Mục đích cuộc họp" required><textarea required rows={4} className="form-input resize-none" placeholder="Ví dụ: Trao đổi hồ sơ hợp tác và kế hoạch triển khai..." /></Field>
+              <Field label="Mục đích cuộc họp" required><textarea name="purpose" required rows={4} className="form-input resize-none" placeholder="Ví dụ: Trao đổi hồ sơ hợp tác và kế hoạch triển khai..." /></Field>
             </section>
 
             <section className="card p-5 md:p-7">
@@ -168,21 +186,24 @@ function GuestBooking() {
                 </span>
                 <div>
                   <h2 className="font-bold text-slate-900">Thời gian và địa điểm</h2>
-                  <p className="mt-0.5 text-xs text-slate-500">Chọn khung giờ và phòng họp phù hợp</p>
+                  <p className="mt-0.5 text-xs text-slate-500">Chọn khung giờ và cơ sở văn phòng phù hợp</p>
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Thời gian bắt đầu" required><input required type="datetime-local" className="form-input" /></Field>
-                <Field label="Thời gian kết thúc" required><input required type="datetime-local" className="form-input" /></Field>
+                <Field label="Thời gian bắt đầu" required><input name="start" required type="datetime-local" className="form-input" /></Field>
+                <Field label="Thời gian kết thúc" required><input name="end" required type="datetime-local" className="form-input" /></Field>
                 <div className="sm:col-span-2">
                   <Field label="Địa điểm diễn ra" required>
-                    <select required className="form-input" defaultValue="">
-                      <option value="" disabled>Chọn phòng họp hoặc khu vực tiếp khách</option>
-                      <option>Phòng họp Lotus 01</option>
-                      <option>Phòng họp Orchid 02</option>
-                      <option>Phòng tiếp khách tầng 1</option>
-                    </select>
+                    <div className="grid grid-cols-[1fr_160px] gap-3">
+                      <select name="room" required className="form-input" defaultValue="Trụ sở chính ACS Hà Nội (Tòa nhà ACS, Cầu Giấy, Hà Nội)">
+                        <option>Trụ sở chính ACS Hà Nội (Tòa nhà ACS, Cầu Giấy, Hà Nội)</option>
+                        <option>Chi nhánh ACS Hồ Chí Minh</option>
+                        <option>Văn phòng ACS Đà Nẵng</option>
+                      </select>
+                      <input name="guestCount" required min={1} type="number" className="form-input" placeholder="Số lượng khách" />
+                    </div>
                   </Field>
+                  <p className="mt-2 flex items-center gap-1.5 text-[11px] text-slate-500"><span className="material-symbols-outlined text-[14px]">schedule</span>Lễ tân tại cơ sở sẽ bố trí phòng họp phù hợp với số lượng khách dự kiến.</p>
                 </div>
               </div>
             </section>
@@ -194,12 +215,12 @@ function GuestBooking() {
                 </span>
                 <div>
                   <h2 className="font-bold text-slate-900">Người chủ trì</h2>
-                  <p className="mt-0.5 text-xs text-slate-500">Chọn cán bộ bạn cần gặp</p>
+                  <p className="mt-0.5 text-xs text-slate-500">Chọn cán bộ bạn cần gặp (Quản lý các phòng ban hoặc Admin/HR)</p>
                 </div>
               </div>
               <Field label="Cán bộ chủ trì" required>
-                <select required className="form-input" defaultValue="">
-                  <option value="" disabled>Chọn cán bộ chủ trì</option>
+                <select name="host" required className="form-input" defaultValue="Trần Thị Mai — Chuyên viên Tuyển dụng & Quản trị Nhân sự">
+                  <option>Trần Thị Mai — Chuyên viên Tuyển dụng & Quản trị Nhân sự</option>
                   <option>Nguyễn Văn An — Ban Giám đốc</option>
                   <option>Lê Hoàng Dũng — Phòng IT</option>
                   <option>Phạm Thu Hà — Phòng Hành chính</option>
@@ -214,14 +235,14 @@ function GuestBooking() {
                 </span>
                 <div>
                   <h2 className="font-bold text-slate-900">Thông tin liên hệ</h2>
-                  <p className="mt-0.5 text-xs text-slate-500">Thông tin dùng để gửi xác nhận lịch hẹn</p>
+                  <p className="mt-0.5 text-xs text-slate-500">Thông tin dùng để gửi xác nhận lịch hẹn và chuẩn bị đón tiếp</p>
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
-                <Field label="Họ và tên" required><input required autoComplete="name" className="form-input" placeholder="Nhập họ tên đầy đủ" /></Field>
-                <Field label="CCCD/CMND" required><input required inputMode="numeric" className="form-input" placeholder="Nhập số giấy tờ" /></Field>
-                <Field label="Email" required><input required type="email" autoComplete="email" className="form-input" placeholder="email@example.com" /></Field>
-                <Field label="Số điện thoại" required><input required type="tel" autoComplete="tel" className="form-input" placeholder="09xxxxxxxx" /></Field>
+                <Field label="Họ và tên" required><input name="guestName" required autoComplete="name" className="form-input" placeholder="Nhập họ tên đầy đủ" /></Field>
+                <Field label="Công ty (Không bắt buộc)"><input name="company" className="form-input" placeholder="Tên công ty hoặc tổ chức công tác" /></Field>
+                <Field label="Email khách" required><input name="email" required type="email" autoComplete="email" className="form-input" placeholder="email@example.com" /></Field>
+                <Field label="Số điện thoại" required><input name="phone" required type="tel" autoComplete="tel" className="form-input" placeholder="09xxxxxxxx" /></Field>
               </div>
             </section>
           </div>
@@ -251,12 +272,10 @@ function GuestBooking() {
               <span className="material-symbols-outlined text-[18px]">send</span>
               Gửi yêu cầu đặt lịch
             </button>
-            <p className="text-center text-xs leading-relaxed text-slate-400 px-4">
-              Bằng việc gửi yêu cầu, bạn đồng ý cho ACS sử dụng thông tin để xử lý lịch hẹn.
-            </p>
           </aside>
         </form>
       </div>
+      <footer className="mt-8 border-t border-slate-200 bg-white px-5 py-6 text-xs text-slate-500"><div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4"><span>© 2026 ACS Meeting Management System. All rights reserved.</span><div className="flex gap-7"><a href="#">Điều khoản sử dụng</a><a href="#">Chính sách bảo mật</a><a href="#">Trung tâm trợ giúp</a></div></div></footer>
     </main>
   );
 }
@@ -284,7 +303,7 @@ function AdminMeetings() {
       date: String(f.get('date')),
       start: String(f.get('start')),
       end: String(f.get('end')),
-      status: editing?.status || 'Sắp diễn ra'
+      status: editing?.status || 'Chưa diễn ra'
     };
     setRows(v => editing ? v.map(x => x.id === editing.id ? item : x) : [item, ...v]);
     setFormOpen(false);
@@ -307,8 +326,8 @@ function AdminMeetings() {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {[
           [shown.length, 'Lịch họp hiển thị', 'calendar_month', 'blue'],
-          [shown.filter(x => x.status === 'Sắp diễn ra').length, 'Sắp diễn ra', 'schedule', 'amber'],
-          [shown.filter(x => x.status === 'Đang diễn ra').length, 'Đang diễn ra', 'play_circle', 'emerald']
+          [shown.filter(x => x.status === 'Chưa diễn ra').length, 'Chưa diễn ra', 'schedule', 'amber'],
+          [shown.filter(x => x.status === 'Chờ xác nhận').length, 'Chờ xác nhận', 'hourglass_top', 'emerald']
         ].map(x => (
           <div key={String(x[1])} className={`stat-card border-l-4 ${x[3] === 'blue' ? 'border-l-blue-500' : x[3] === 'amber' ? 'border-l-amber-500' : 'border-l-emerald-500'}`}>
             <div className="flex items-start justify-between">
@@ -344,7 +363,6 @@ function AdminMeetings() {
                 <th className="px-5 py-3">Thời gian</th>
                 <th className="px-5 py-3">Địa điểm</th>
                 <th className="px-5 py-3">Trạng thái</th>
-                <th className="px-5 py-3 text-right">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -361,25 +379,15 @@ function AdminMeetings() {
                   </td>
                   <td className="px-5 py-4 text-slate-600">{m.room}</td>
                   <td className="px-5 py-4">
-                    <span className={`badge ${m.status === 'Đang diễn ra' ? 'badge-green' : m.status === 'Sắp diễn ra' ? 'badge-blue' : 'badge-slate'}`}>
+                    <span className={`badge ${m.status === 'Chờ xác nhận' ? 'badge-amber' : m.status === 'Chưa diễn ra' ? 'badge-blue' : m.status === 'Đã từ chối' ? 'badge-red' : 'badge-slate'}`}>
                       {m.status}
                     </span>
-                  </td>
-                  <td className="px-5 py-4 text-right">
-                    <div className="inline-flex gap-1">
-                      <button onClick={() => openEdit(m)} className="flex h-8 w-8 items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50" title="Sửa">
-                        <span className="material-symbols-outlined text-[18px]">edit</span>
-                      </button>
-                      <button onClick={() => setRows(v => v.filter(x => x.id !== m.id))} className="flex h-8 w-8 items-center justify-center rounded-lg text-red-600 hover:bg-red-50" title="Xóa">
-                        <span className="material-symbols-outlined text-[18px]">delete</span>
-                      </button>
-                    </div>
                   </td>
                 </tr>
               ))}
               {shown.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-5 py-10 text-center text-slate-500">Không tìm thấy cuộc họp nào.</td>
+                  <td colSpan={5} className="px-5 py-10 text-center text-slate-500">Không tìm thấy cuộc họp nào.</td>
                 </tr>
               )}
             </tbody>
@@ -440,8 +448,9 @@ function AdminMeetings() {
 
 function EmployeeMeetings() {
   const [params, setParams] = useSearchParams();
-  const [tab, setTab] = useState<'Tất cả' | 'Chưa diễn ra' | 'Đã kết thúc'>('Tất cả');
+  const [tab, setTab] = useState<'Tất cả' | Meeting['status']>('Tất cả');
   const [detail, setDetail] = useState<Meeting | null>(null);
+  const [uploadedMinutes, setUploadedMinutes] = useState('');
   
   useEffect(() => {
     const id = params.get('meeting');
@@ -459,7 +468,7 @@ function EmployeeMeetings() {
     }
   };
   
-  const rows = INITIAL_MEETINGS.filter(m => tab === 'Tất cả' || (tab === 'Chưa diễn ra' ? m.status !== 'Đã kết thúc' : m.status === 'Đã kết thúc'));
+  const rows = INITIAL_MEETINGS.filter(m => tab === 'Tất cả' || m.status === tab);
 
   return (
     <div className="flex flex-col gap-6 p-6 min-h-screen bg-[#F8FAFC]">
@@ -472,13 +481,13 @@ function EmployeeMeetings() {
       <section className="card flex flex-col overflow-hidden">
         <header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 p-5">
           <div className="flex rounded-lg bg-slate-100 p-1">
-            {(['Tất cả', 'Chưa diễn ra', 'Đã kết thúc'] as const).map(x => (
+            {(['Tất cả', 'Chờ xác nhận', 'Chưa diễn ra', 'Đã diễn ra', 'Đã hủy', 'Đã từ chối'] as const).map(x => (
               <button
                 key={x}
                 onClick={() => setTab(x)}
                 className={`rounded-md px-4 py-1.5 text-sm font-medium transition ${tab === x ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
               >
-                {x} ({x === 'Tất cả' ? 8 : x === 'Chưa diễn ra' ? 6 : 2})
+                {x} ({x === 'Tất cả' ? INITIAL_MEETINGS.length : INITIAL_MEETINGS.filter(m => m.status === x).length})
               </button>
             ))}
           </div>
@@ -505,7 +514,7 @@ function EmployeeMeetings() {
                   </td>
                   <td className="px-5 py-4 text-slate-600">{m.room}</td>
                   <td className="px-5 py-4">
-                    <span className={`badge ${m.status === 'Đã kết thúc' ? 'badge-slate' : m.status === 'Sắp diễn ra' ? 'badge-blue' : 'badge-green'}`}>
+                    <span className={`badge ${m.status === 'Chờ xác nhận' ? 'badge-amber' : m.status === 'Chưa diễn ra' ? 'badge-blue' : m.status === 'Đã từ chối' ? 'badge-red' : 'badge-slate'}`}>
                       {m.status}
                     </span>
                   </td>
@@ -538,6 +547,7 @@ function EmployeeMeetings() {
                 <div>
                   <p className="text-xs text-slate-500">Chủ trì</p>
                   <p className="mt-1 font-semibold text-slate-900">{detail.host}</p>
+                  <p className="mt-1 text-xs text-slate-500">SĐT: {detail.host==='Lê Hoàng Dũng'?'0903 456 788':'0903 456 789'}</p>
                 </div>
                 <div>
                   <p className="text-xs text-slate-500">Phòng họp</p>
@@ -580,6 +590,12 @@ function EmployeeMeetings() {
                     Xem
                   </button>
                 </div>
+                {detail.status === 'Đã diễn ra' && <label className="mt-3 flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-dashed border-blue-300 bg-blue-50 px-4 py-3 text-sm font-semibold text-blue-700 hover:bg-blue-100">
+                  <span className="material-symbols-outlined text-[18px]">upload_file</span>
+                  {uploadedMinutes || 'Tải biên bản cuộc họp lên'}
+                  <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx" className="hidden" onChange={e => setUploadedMinutes(e.target.files?.[0]?.name || '')} />
+                </label>}
+                <p className="mt-1.5 text-[11px] text-slate-400">Thư ký chỉ được tải biên bản sau khi cuộc họp đã diễn ra.</p>
               </div>
               
               <div className="mt-5">
@@ -612,13 +628,16 @@ function EmployeeMeetings() {
 export default function LichHop() {
   const { role } = useRole();
   const [params, setParams] = useSearchParams();
-  const [meetings, setMeetings] = useState(INITIAL_MEETINGS);
+  const [meetings, setMeetings] = useState<Meeting[]>(() => [...loadGuestMeetings(), ...INITIAL_MEETINGS]);
   const [query, setQuery] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [detail, setDetail] = useState<Meeting | null>(null);
-  const [detailPage, setDetailPage] = useState(1);
-
-  useEffect(() => { if (detail) setDetailPage(1) }, [detail?.id]);
+  const [editingMeeting, setEditingMeeting] = useState<Meeting | null>(null);
+  const [meetingType, setMeetingType] = useState<'internal'|'guest'>('internal');
+  const [memberPickerOpen, setMemberPickerOpen] = useState(false);
+  const [memberQuery, setMemberQuery] = useState('');
+  const [selectedMembers, setSelectedMembers] = useState<string[]>(['Lê Hoàng Dũng','Trần Thị Mai']);
+  const [memberRoles, setMemberRoles] = useState<Record<string,string>>({'Lê Hoàng Dũng':'Chủ trì','Trần Thị Mai':'Thư ký cuộc họp'});
 
   useEffect(() => {
     if (role !== 'MANAGER') return;
@@ -639,26 +658,23 @@ export default function LichHop() {
   };
   
   const visible = useMemo(() => meetings
-    .filter(m => role === 'MANAGER' ? m.host === 'Lê Hoàng Dũng' : m.participants.includes('Trần Thị Mai'))
+    .filter(m => role === 'MANAGER' ? (m.host === 'Lê Hoàng Dũng' || m.id.startsWith('LH-KH-')) : m.participants.includes('Trần Thị Mai'))
     .filter(m => `${m.title} ${m.host} ${m.room}`.toLowerCase().includes(query.toLowerCase())), 
   [meetings, query, role]);
   
   if (role === 'GUEST') return <GuestBooking />;
   if (role === 'ADMIN') return <AdminMeetings />;
-  if (role === 'EMPLOYEE') return <EmployeeMeetings />;
+  if (role === 'EMPLOYEE' || role === 'HR') return <EmployeeMeetings />;
   
   const canManage = role === 'MANAGER';
-  const remove = (id: string) => setMeetings(x => x.filter(m => m.id !== id));
-  const detailAttendees = [
-    ['LD', detail?.host || 'Lê Hoàng Dũng', 'Trưởng phòng IT', 'Chủ trì (Host)', '0912.345.678'],
-    ['LB', 'Lê Thanh Bình', 'Frontend Developer', 'Thành viên dự án', '0988.123.456'],
-    ['NH', 'Nguyễn Văn Hùng', 'Kỹ sư phần mềm', 'Thành viên dự án', '0903.456.789'],
-    ['KL', 'Vũ Khánh Linh', 'Senior Dev', 'Thành viên dự án', '0977.889.900'],
-    ['TH', 'Trần Thu Hà', 'Khách', 'Khách mời HR', '0934.556.677'],
-    ['PM', 'Phạm Minh Tuấn', 'Backend Developer', 'Thành viên dự án', '0905.332.118'],
-    ['QB', 'Đỗ Quốc Bảo', 'QA Engineer', 'Thành viên dự án', '0918.220.445'],
-    ['TM', 'Trần Thị Mai', 'Nhân viên', 'Thành viên dự án', '0966.112.889'],
-  ];
+  const updateMeetingStatus = (id: string, status: Meeting['status']) => setMeetings(current => {
+    const next = current.map(m => m.id === id ? {...m, status} : m);
+    localStorage.setItem(GUEST_MEETINGS_KEY, JSON.stringify(next.filter(m => m.id.startsWith('LH-KH-'))));
+    return next;
+  });
+  const cancelMeeting = (id: string) => updateMeetingStatus(id, 'Đã hủy');
+  const rejectMeeting = (id: string) => updateMeetingStatus(id, 'Đã từ chối');
+  const confirmMeeting = (id: string) => updateMeetingStatus(id, 'Chưa diễn ra');
 
   return (
     <div className="flex flex-col gap-6 p-6 min-h-screen bg-[#F8FAFC]">
@@ -668,7 +684,7 @@ export default function LichHop() {
           <p className="mt-1 text-sm text-slate-500">Quản lý các cuộc họp do bạn chủ trì</p>
         </div>
         {canManage && (
-          <button onClick={() => setShowForm(true)} className="btn-primary">
+          <button onClick={() => { setEditingMeeting(null); setShowForm(true) }} className="btn-primary">
             <span className="material-symbols-outlined text-[18px]">add</span>
             Tạo lịch họp
           </button>
@@ -685,17 +701,17 @@ export default function LichHop() {
         </div>
         <div className="stat-card border-l-4 border-l-blue-500">
           <div>
-            <p className="text-2xl font-bold text-slate-900">{visible.filter(x => x.status === 'Sắp diễn ra').length}</p>
-            <p className="mt-0.5 text-xs text-slate-500">Sắp diễn ra</p>
+            <p className="text-2xl font-bold text-slate-900">{visible.filter(x => x.status === 'Chưa diễn ra').length}</p>
+            <p className="mt-0.5 text-xs text-slate-500">Chưa diễn ra</p>
           </div>
           <span className="material-symbols-outlined rounded-xl bg-blue-50 p-2.5 text-xl text-blue-600">schedule</span>
         </div>
         <div className="stat-card border-l-4 border-l-emerald-500">
           <div>
-            <p className="text-2xl font-bold text-slate-900">{visible.filter(x => x.status === 'Đang diễn ra').length}</p>
-            <p className="mt-0.5 text-xs text-slate-500">Đang diễn ra</p>
+            <p className="text-2xl font-bold text-slate-900">{visible.filter(x => x.status === 'Chờ xác nhận').length}</p>
+            <p className="mt-0.5 text-xs text-slate-500">Chờ xác nhận</p>
           </div>
-          <span className="material-symbols-outlined rounded-xl bg-emerald-50 p-2.5 text-xl text-emerald-600">play_circle</span>
+          <span className="material-symbols-outlined rounded-xl bg-emerald-50 p-2.5 text-xl text-emerald-600">hourglass_top</span>
         </div>
       </div>
       
@@ -716,7 +732,6 @@ export default function LichHop() {
                 <th className="px-5 py-3">Thời gian</th>
                 <th className="px-5 py-3">Địa điểm</th>
                 <th className="px-5 py-3">Trạng thái</th>
-                <th className="px-5 py-3 text-right">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -733,31 +748,15 @@ export default function LichHop() {
                   </td>
                   <td className="px-5 py-4 text-slate-600">{m.room}</td>
                   <td className="px-5 py-4">
-                    <span className={`badge ${m.status === 'Đang diễn ra' ? 'badge-green' : m.status === 'Sắp diễn ra' ? 'badge-blue' : 'badge-slate'}`}>
+                    <span className={`badge ${m.status === 'Chờ xác nhận' ? 'badge-amber' : m.status === 'Chưa diễn ra' ? 'badge-blue' : m.status === 'Đã từ chối' ? 'badge-red' : 'badge-slate'}`}>
                       {m.status}
                     </span>
-                  </td>
-                  <td className="px-5 py-4 text-right">
-                    {canManage ? (
-                      <div className="inline-flex gap-1">
-                        <button onClick={e => { e.stopPropagation(); setDetail(m) }} className="flex h-8 w-8 items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50" title="Xem chi tiết">
-                          <span className="material-symbols-outlined text-[18px]">edit</span>
-                        </button>
-                        <button onClick={e => { e.stopPropagation(); remove(m.id) }} className="flex h-8 w-8 items-center justify-center rounded-lg text-red-600 hover:bg-red-50" title="Xóa">
-                          <span className="material-symbols-outlined text-[18px]">delete</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <button onClick={() => setDetail(m)} className="btn-secondary text-blue-600 py-1.5 px-3">
-                        Xem chi tiết
-                      </button>
-                    )}
                   </td>
                 </tr>
               ))}
               {visible.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-5 py-10 text-center text-slate-500">Không có lịch họp phù hợp.</td>
+                  <td colSpan={5} className="px-5 py-10 text-center text-slate-500">Không có lịch họp phù hợp.</td>
                 </tr>
               )}
             </tbody>
@@ -768,74 +767,64 @@ export default function LichHop() {
       {/* Meeting detail modal — same structure as employee */}
       {detail && role === 'MANAGER' && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm" onMouseDown={e => { if (e.target === e.currentTarget) closeManagerDetail() }}>
-          <section className="flex max-h-[94vh] w-full max-w-[760px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl animate-scale-in">
-            <header className="flex shrink-0 items-center justify-between border-b border-slate-100 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined rounded-xl border border-blue-100 bg-blue-50 p-2 text-[20px] text-blue-600">event</span>
-                <h2 className="text-base font-bold text-slate-900">Chi tiết cuộc họp</h2>
-                <span className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${detail.status === 'Đang diễn ra' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : detail.status === 'Sắp diễn ra' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-slate-200 bg-slate-50 text-slate-600'}`}>• {detail.status}</span>
-              </div>
+          <section className="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-xl animate-scale-in">
+            <header className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
+              <h2 className="text-base font-bold text-slate-900">Chi tiết lịch họp</h2>
               <button onClick={closeManagerDetail} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </header>
-            <div className="flex-1 overflow-y-auto p-6">
-              <h3 className="text-lg font-bold text-slate-900">{detail.title}</h3>
-              <p className="mt-1.5 flex items-center gap-1.5 text-xs text-slate-500">
-                <span className="material-symbols-outlined text-[14px] text-blue-600">verified</span>
-                Tổ chức bởi <b className="text-slate-700">{detail.host}</b><span className="text-slate-400">(Trưởng phòng IT)</span>
-              </p>
-              <div className="my-5 border-t border-slate-100" />
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="flex items-center gap-1.5 text-xs text-slate-500"><span className="material-symbols-outlined text-[15px] text-blue-600">schedule</span>Thời gian diễn ra</p>
-                  <p className="mt-1.5 text-sm font-bold text-slate-800">{detail.date === '21/10/2024' ? 'Hôm nay, Thứ Hai 21/10/2024' : detail.date}</p>
-                  <p className="text-xs text-slate-500">{detail.start} - {detail.end} <span className="text-slate-400">(Thời lượng: 60 phút)</span></p>
+            <div className="max-h-[70vh] overflow-y-auto p-6">
+              <p className="text-xs font-semibold text-slate-500">Tên cuộc họp</p>
+              <h2 className="mt-1 text-lg font-bold text-slate-900">{detail.title}</h2>
+
+              <div className="mt-5 grid grid-cols-2 gap-4 rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm">
+                <div>
+                  <p className="text-xs text-slate-500">Chủ trì</p>
+                  <p className="mt-1 font-semibold text-slate-900">{detail.host}</p>
+                  <p className="mt-1 text-xs text-slate-500">SĐT: {detail.host==='Lê Hoàng Dũng'?'0903 456 788':'0903 456 789'}</p>
                 </div>
-                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="flex items-center gap-1.5 text-xs text-slate-500"><span className="material-symbols-outlined text-[15px] text-blue-600">apartment</span>Hình thức &amp; Địa điểm</p>
-                  <p className="mt-1.5 text-sm font-bold text-slate-800">{detail.room}</p>
+                <div>
+                  <p className="text-xs text-slate-500">Phòng họp</p>
+                  <p className="mt-1 font-semibold text-slate-900">{detail.room}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Ngày</p>
+                  <p className="mt-1 font-semibold text-slate-900">{detail.date}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-slate-500">Thời gian</p>
+                  <p className="mt-1 font-semibold text-slate-900">{detail.start} - {detail.end}</p>
                 </div>
               </div>
 
-              <p className="mb-2 mt-5 flex items-center gap-1.5 text-xs font-bold uppercase text-slate-600">
-                <span className="material-symbols-outlined text-[15px]">group</span>Thành phần tham gia (8 người) – Trang 1/2
-              </p>
-              <div className="overflow-hidden rounded-xl border border-slate-200">
-                <table className="w-full text-left">
-                  <thead className="bg-slate-50 text-[10px] uppercase text-slate-500">
-                    <tr><th className="px-4 py-3">Thành viên</th><th className="px-4 py-3">Vai trò</th><th className="px-4 py-3">Trạng thái</th></tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {detailAttendees.slice(detailPage === 1 ? 0 : 5, detailPage === 1 ? 5 : 8).map((m, i) => (
-                      <tr key={`${m[1]}-${i}`}>
-                        <td className="px-4 py-2.5"><div className="flex items-center gap-2.5"><span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${i === 0 ? 'bg-blue-600 text-white' : i === 1 ? 'bg-emerald-100 text-emerald-700' : i === 3 ? 'bg-rose-50 text-rose-600' : 'bg-blue-50 text-blue-700'}`}>{m[0]}</span><div><p className="text-xs font-semibold text-slate-800">{m[1]}</p><p className="text-[9px] text-slate-400">⌕ {m[4]}</p></div></div></td>
-                        <td className="px-4 py-2.5"><p className="text-xs font-medium text-slate-800">{m[2]}</p><p className={`text-[9px] ${i === 0 ? 'text-blue-600' : i === 4 ? 'text-amber-600' : 'text-slate-400'}`}>{m[3]}</p></td>
-                        <td className="px-4 py-2.5"><span className="inline-flex whitespace-nowrap rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[9px] font-medium text-blue-700">✉ Đã gửi lời mời</span></td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50 px-4 py-2.5 text-[10px] text-slate-500">
-                  <span>{detailPage === 1 ? 'Hiển thị 1 – 5 trong số 8 người tham gia' : 'Hiển thị 6 – 8 trong số 8 người tham gia'}</span>
-                  <div className="flex gap-1">
-                    <button onClick={() => setDetailPage(1)} disabled={detailPage === 1} className="h-6 w-6 rounded border border-slate-200 disabled:text-slate-300">‹</button>
-                    <button onClick={() => setDetailPage(1)} className={`h-6 w-6 rounded font-semibold ${detailPage === 1 ? 'bg-blue-600 text-white' : 'border border-slate-200'}`}>1</button>
-                    <button onClick={() => setDetailPage(2)} className={`h-6 w-6 rounded font-semibold ${detailPage === 2 ? 'bg-blue-600 text-white' : 'border border-slate-200'}`}>2</button>
-                    <button onClick={() => setDetailPage(2)} disabled={detailPage === 2} className="h-6 w-6 rounded border border-slate-200 disabled:text-slate-300">›</button>
-                  </div>
-                </div>
+              <div className="mt-5"><p className="text-sm font-bold text-slate-900">Nội dung cuộc họp</p><div className="mt-2 rounded-xl border border-slate-100 bg-slate-50 p-4 text-sm leading-relaxed text-slate-600">• Rà soát tiến độ triển khai các tính năng mới trong sprint 42.<br/>• Đánh giá kết quả kiểm thử và thống nhất phương án xử lý các lỗi tồn đọng.<br/>• Phân công nhiệm vụ chuẩn bị nghiệm thu giai đoạn 1.</div></div>
+
+              <div className="mt-5">
+                <div className="flex items-center justify-between"><p className="text-sm font-bold text-slate-900">Biên bản cuộc họp</p><span className="text-xs text-slate-400">Cập nhật 22/10/2024</span></div>
+                <div className="mt-2 flex items-center justify-between rounded-xl border border-slate-200 p-3"><div className="flex items-center gap-3"><span className="material-symbols-outlined rounded-lg bg-blue-50 p-2 text-[20px] text-blue-600">description</span><div><p className="text-sm font-semibold text-slate-900">Biên bản cuộc họp tiến độ dự án ACS_221</p><p className="mt-0.5 text-[11px] text-slate-500">245 KB • Cập nhật bởi Thư ký</p></div></div><button onClick={() => window.alert('Đang mở biên bản cuộc họp')} className="btn-secondary px-3 py-1.5 text-blue-600"><span className="material-symbols-outlined text-[16px]">visibility</span>Xem</button></div>
               </div>
+
+              <div className="mt-5"><p className="text-sm font-bold text-slate-900">Người tham gia ({detail.participants.length})</p><div className="mt-3 divide-y divide-slate-100 rounded-xl border border-slate-200">{detail.participants.map((p, i) => <div key={p} className="flex items-center justify-between px-4 py-3"><div><p className="text-sm font-semibold text-slate-900">{p}</p><p className="text-xs text-slate-500">0{3+i}2 545 1548</p></div><span className={`badge ${i === 0 ? 'badge-amber' : i === 2 ? 'badge-purple' : 'badge-slate'}`}>{i === 0 ? 'Thư ký' : i === 2 ? 'Giám đốc' : 'Nhân viên'}</span></div>)}</div></div>
             </div>
-            <footer className="flex shrink-0 items-center justify-between border-t border-slate-100 bg-slate-50 px-6 py-4">
-              <button onClick={() => { remove(detail.id); closeManagerDetail() }} className="btn-danger text-xs">
-                <span className="material-symbols-outlined text-[16px]">event_busy</span>
-                Hủy lịch họp
-              </button>
-              <button onClick={() => { closeManagerDetail(); setShowForm(true) }} className="btn-secondary text-xs">
-                <span className="material-symbols-outlined text-[16px]">edit_calendar</span>
-                Chỉnh sửa
-              </button>
+            <footer className="flex items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/70 px-6 py-4">
+              {detail.status === 'Chờ xác nhận' && <>
+                <button onClick={() => { rejectMeeting(detail.id); closeManagerDetail() }} className="btn-danger text-xs">
+                  <span className="material-symbols-outlined text-[16px]">close</span>Từ chối
+                </button>
+                <button onClick={() => { confirmMeeting(detail.id); closeManagerDetail() }} className="btn-primary text-xs">
+                  <span className="material-symbols-outlined text-[16px]">check_circle</span>Chấp nhận
+                </button>
+              </>}
+              {detail.status === 'Chưa diễn ra' && <>
+                <button onClick={() => { cancelMeeting(detail.id); closeManagerDetail() }} className="btn-danger text-xs">
+                  <span className="material-symbols-outlined text-[16px]">event_busy</span>Hủy lịch họp
+                </button>
+                <button onClick={() => { setEditingMeeting(detail); closeManagerDetail(); setShowForm(true) }} className="btn-secondary text-xs">
+                  <span className="material-symbols-outlined text-[16px]">edit_calendar</span>Chỉnh sửa
+                </button>
+              </>}
+              {(detail.status === 'Đã diễn ra' || detail.status === 'Đã hủy' || detail.status === 'Đã từ chối') && <button onClick={closeManagerDetail} className="btn-secondary text-xs">Đóng</button>}
             </footer>
           </section>
         </div>
@@ -847,49 +836,74 @@ export default function LichHop() {
           <form onSubmit={e => { 
             e.preventDefault(); 
             const f = new FormData(e.currentTarget); 
-            setMeetings([{ 
-              id: `LH-${Date.now().toString().slice(-4)}`, 
+            const nextMeeting: Meeting = { 
+              id: editingMeeting?.id || `LH-${Date.now().toString().slice(-4)}`, 
               title: String(f.get('title')), 
               host: role === 'MANAGER' ? 'Lê Hoàng Dũng' : String(f.get('host')), 
-              participants: ['Trần Thị Mai'], 
+              participants: selectedMembers.filter(x => x !== 'Lê Hoàng Dũng'),
               room: String(f.get('room')), 
               date: String(f.get('date')), 
               start: String(f.get('start')), 
               end: String(f.get('end')), 
-              status: 'Sắp diễn ra' 
-            }, ...meetings]); 
-            setShowForm(false) 
-          }} className="w-full max-w-xl overflow-hidden rounded-2xl bg-white shadow-xl animate-scale-in">
+              status: editingMeeting?.status || 'Chưa diễn ra'
+            };
+            setMeetings(editingMeeting ? meetings.map(m => m.id === editingMeeting.id ? nextMeeting : m) : [nextMeeting, ...meetings]);
+            setShowForm(false); setEditingMeeting(null)
+          }} className="flex max-h-[94vh] w-full max-w-[670px] flex-col overflow-hidden rounded-2xl bg-white shadow-xl animate-scale-in">
             <header className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-              <h2 className="text-base font-bold text-slate-900">Tạo lịch họp</h2>
+              <div className="flex items-center gap-3"><span className="material-symbols-outlined rounded-xl border border-blue-100 bg-blue-50 p-2 text-[20px] text-blue-600">event</span><h2 className="text-lg font-bold text-slate-900">{editingMeeting ? 'Chỉnh sửa lịch họp' : 'Tạo lịch họp'}</h2></div>
               <button type="button" onClick={() => setShowForm(false)} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </header>
-            <div className="grid gap-4 p-6 sm:grid-cols-2">
+            <div className="grid flex-1 gap-4 overflow-y-auto p-6 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <Field label="Tên cuộc họp" required><input name="title" required className="form-input mt-1.5" /></Field>
+                <Field label="Tên cuộc họp" required><input name="title" required defaultValue={editingMeeting?.title} className="form-input mt-1.5" /></Field>
               </div>
-              <Field label="Ngày họp" required><input name="date" required placeholder="dd/mm/yyyy" className="form-input mt-1.5" /></Field>
+              <div className="sm:col-span-2">
+                <p className="form-label">Thể loại họp <span className="text-red-500">*</span></p>
+                <div className="mt-2 grid grid-cols-2 gap-3">
+                  <button type="button" onClick={() => setMeetingType('internal')} className={`flex items-center gap-3 rounded-xl border-2 p-3 text-left ${meetingType==='internal'?'border-blue-600 bg-blue-50':'border-slate-200'}`}><span className={`material-symbols-outlined rounded-lg p-2 ${meetingType==='internal'?'bg-blue-600 text-white':'bg-slate-100 text-slate-500'}`}>groups</span><span><b className="block text-sm text-slate-800">Nội bộ công ty</b><small className="text-slate-400">Chỉ nhân viên nội bộ</small></span></button>
+                  <button type="button" onClick={() => setMeetingType('guest')} className={`flex items-center gap-3 rounded-xl border-2 p-3 text-left ${meetingType==='guest'?'border-blue-600 bg-blue-50':'border-slate-200'}`}><span className={`material-symbols-outlined rounded-lg p-2 ${meetingType==='guest'?'bg-blue-600 text-white':'bg-slate-100 text-slate-500'}`}>handshake</span><span><b className="block text-sm text-slate-800">Có khách mời</b><small className="text-slate-400">Đối tác / Khách ngoài</small></span></button>
+                </div>
+              </div>
+              {meetingType==='guest' && <div className="sm:col-span-2 rounded-xl border border-blue-200 bg-blue-50/60 p-3"><div className="mb-2 flex items-center justify-between"><b className="text-xs uppercase text-blue-800">Danh sách khách / Đối tác <span className="text-red-500">*</span></b><span className="text-xs text-blue-600">1 người đã thêm</span></div><div className="flex items-center gap-2"><span className="material-symbols-outlined text-[16px] text-blue-600">business_center</span><input name="guest" required defaultValue="Ông Trần Đình Trọng - Giám đốc Công nghệ Công ty FPT Software" className="form-input bg-white" /></div></div>}
+              <Field label="Ngày họp" required><input name="date" type="date" required defaultValue={editingMeeting ? editingMeeting.date.split('/').reverse().join('-') : '2024-10-24'} className="form-input mt-1.5" /></Field>
               <Field label="Phòng họp" required>
-                <select name="room" className="form-input mt-1.5">
-                  <option>Phòng họp Lotus 01</option>
-                  <option>Phòng họp Orchid 02</option>
+                <select name="room" defaultValue={editingMeeting?.room} className="form-input mt-1.5">
+                  <option>Phòng họp Lotus 01 (Tầng 2 - 12 chỗ)</option>
+                  <option>Phòng họp Orchid 02 (Tầng 3 - 8 chỗ)</option>
+                  <option>Phòng họp Polaris (Tầng 4)</option>
                 </select>
               </Field>
-              <Field label="Bắt đầu" required><input name="start" type="time" required className="form-input mt-1.5" /></Field>
-              <Field label="Kết thúc" required><input name="end" type="time" required className="form-input mt-1.5" /></Field>
+              <Field label="Bắt đầu" required><input name="start" type="time" required defaultValue={editingMeeting?.start || '09:00'} className="form-input mt-1.5" /></Field>
+              <Field label="Kết thúc" required><input name="end" type="time" required defaultValue={editingMeeting?.end || '10:30'} className="form-input mt-1.5" /></Field>
+              <div className="sm:col-span-2"><div className="mb-2 flex items-center justify-between"><span className="form-label mb-0">Cán bộ / Nhân viên tham gia <span className="text-red-500">*</span></span><span className="text-xs text-slate-500">Đã chọn: <b className="text-blue-600">{selectedMembers.length} thành viên</b></span></div><div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">{selectedMembers.map((name,i)=><div key={name} className="flex items-center gap-2 border-b border-slate-100 px-4 py-2.5 last:border-0"><span className={`h-2 w-2 rounded-full ${i===0?'bg-blue-600':'bg-slate-300'}`}/><b className="text-sm text-slate-800">{name}</b><span className="text-slate-300">—</span><span className="text-xs text-slate-500">{MEETING_STAFF.find(x=>x.name===name)?.dept}</span>{i===0?<span className="ml-auto badge badge-blue">Host</span>:<button type="button" onClick={()=>setSelectedMembers(v=>v.filter(x=>x!==name))} className="ml-auto text-slate-400">×</button>}</div>)}<button type="button" onClick={()=>setMemberPickerOpen(true)} className="px-5 py-3 text-xs font-semibold text-blue-600">+ Thêm nhân viên</button></div></div>
+              <div className="sm:col-span-2"><Field label="Ghi chú / Nội dung cuộc họp"><textarea name="notes" rows={2} defaultValue="Trao đổi demo giải pháp tích hợp API hệ thống ACS và bàn giao hạ tầng thử nghiệm đợt 1." className="form-input mt-1.5 resize-none" /></Field></div>
             </div>
             <footer className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50/70 px-6 py-4">
               <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">Hủy</button>
               <button type="submit" className="btn-primary">
                 <span className="material-symbols-outlined text-[16px]">save</span>
-                Lưu lịch họp
+                {editingMeeting ? 'Lưu thay đổi' : 'Tạo lịch họp'}
               </button>
             </footer>
           </form>
         </div>
       )}
+
+      {memberPickerOpen && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-slate-900/55 p-4" onMouseDown={e=>{if(e.target===e.currentTarget)setMemberPickerOpen(false)}}>
+          <section className="flex max-h-[90vh] w-full max-w-[670px] flex-col overflow-hidden rounded-2xl bg-white shadow-2xl">
+            <header className="flex items-center justify-between border-b px-6 py-4"><div className="flex items-center gap-3"><span className="material-symbols-outlined rounded-xl bg-blue-50 p-2 text-blue-600">group_add</span><h2 className="text-lg font-bold">Thêm nhân viên tham gia</h2></div><button onClick={()=>setMemberPickerOpen(false)} className="text-slate-400"><span className="material-symbols-outlined">close</span></button></header>
+            <div className="grid grid-cols-2 gap-3 px-6 pt-5"><label><span className="form-label">Họ tên</span><input value={memberQuery} onChange={e=>setMemberQuery(e.target.value)} className="form-input" placeholder="Tìm theo họ tên nhân viên..." /></label><label><span className="form-label">Phòng ban</span><select className="form-input"><option>Phòng Công nghệ thông tin (IT)</option><option>Phòng Nhân sự (HR)</option></select></label></div>
+            <div className="flex items-center justify-between px-6 py-3 text-xs text-slate-500"><span>Hiển thị <b>7</b> / 10.450 nhân sự</span><button onClick={()=>setSelectedMembers(MEETING_STAFF.map(x=>x.name))} className="font-semibold text-blue-600">Chọn cả phòng ban (IT)</button></div>
+            <div className="mx-6 flex-1 overflow-y-auto rounded-xl border">{MEETING_STAFF.filter(x=>x.name.toLowerCase().includes(memberQuery.toLowerCase())).map((person,i)=>{const checked=selectedMembers.includes(person.name);return <div key={person.name} className="flex items-center gap-3 border-b px-3 py-3 last:border-0"><input type="checkbox" checked={checked} disabled={i===0} onChange={()=>setSelectedMembers(v=>checked?v.filter(x=>x!==person.name):[...v,person.name])} className="h-4 w-4 accent-blue-600"/><span className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white ${person.color}`}>{person.initials}</span><div className="min-w-0 flex-1"><div className="flex items-center gap-2"><b className="text-sm">{person.name}</b>{i===0&&<span className="badge badge-blue">Chủ trì</span>}{memberRoles[person.name]==='Thư ký cuộc họp'&&<span className="badge badge-purple">Thư ký</span>}</div><p className="truncate text-xs text-slate-500">{person.email} • {person.dept}</p></div><select disabled={i===0} value={memberRoles[person.name] || 'Người tham gia'} onChange={e=>setMemberRoles(v=>({...v,[person.name]:e.target.value}))} className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs"><option>Người tham gia</option><option>Thư ký cuộc họp</option></select></div>})}</div>
+            <footer className="mt-5 flex items-center justify-between border-t bg-slate-50 px-6 py-4"><span className="text-sm text-slate-600">Đã chọn: <b>{selectedMembers.length} nhân viên</b></span><div className="flex gap-3"><button onClick={()=>setMemberPickerOpen(false)} className="btn-secondary">Hủy</button><button onClick={()=>setMemberPickerOpen(false)} className="btn-primary"><span className="material-symbols-outlined text-[17px]">check</span>Xác nhận thêm ({selectedMembers.length})</button></div></footer>
+          </section>
+        </div>
+      )}
     </div>
   );
 }
+

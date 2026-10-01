@@ -243,9 +243,9 @@ export default function GiMSTChMCNg() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [selected, setSelected] = useState<Alert | null>(null);
 
-  if (role === 'MANAGER' && managerView === 'team') return <ManagerViolationList />;
+  if ((role === 'MANAGER' || role === 'HR') && managerView === 'team') return <ManagerViolationList />;
 
-  if (role === 'EMPLOYEE' || (role === 'MANAGER' && !managerView)) {
+  if (role === 'EMPLOYEE' || ((role === 'MANAGER' || role === 'HR') && !managerView)) {
     const mine = [
       { id:'VP-01', date:'18/09/2026', type:'Đi muộn', detail:'Check-in lúc 08:42, muộn 12 phút', status:'Chờ giải trình', note:'' },
       { id:'VP-02', date:'15/09/2026', type:'Đi muộn', detail:'Check-in lúc 09:15, muộn 45 phút', status:'Bị từ chối', note:'Lý do từ chối: Giải trình không có minh chứng hợp lệ' },
@@ -280,14 +280,14 @@ export default function GiMSTChMCNg() {
             <table className="w-full min-w-[900px] text-left">
               <thead>
                 <tr className="table-header">
-                  {['STT','Ngày','Loại vi phạm','Chi tiết','Trạng thái','Thao tác'].map(x=>(
+                  {['STT','Ngày','Loại vi phạm','Chi tiết','Trạng thái'].map(x=>(
                     <th key={x} className="px-4 py-3">{x}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
                 {mine.map((x,index)=>(
-                  <tr key={x.id} className="text-sm hover:bg-slate-50 transition">
+                  <tr key={x.id} onClick={()=>{setSelected(x);if(x.status==='Chờ giải trình')setActiveModal('complaint');else if(x.status==='Bị từ chối'||x.status==='Đã giải trình')setActiveModal('detail')}} className="cursor-pointer text-sm hover:bg-blue-50/50 transition">
                     <td className="px-4 py-3 text-slate-400">{index+1}</td>
                     <td className="px-4 py-3 font-semibold text-slate-900">{x.date}</td>
                     <td className="px-4 py-3 text-slate-700">{x.type}</td>
@@ -299,18 +299,6 @@ export default function GiMSTChMCNg() {
                       <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold border ${x.status==='Đã giải trình'?'bg-emerald-50 text-emerald-700 border-emerald-200':x.status==='Bị từ chối'?'bg-red-50 text-red-600 border-red-200':'bg-amber-50 text-amber-700 border-amber-200'}`}>
                         {x.status}
                       </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      {x.status==='Chờ giải trình' ? (
-                        <button onClick={()=>{setSelected(x);setActiveModal('complaint')}} className="btn-primary text-xs py-1.5">
-                          <span className="material-symbols-outlined text-[16px]">edit_note</span>
-                          Giải trình ngay
-                        </button>
-                      ) : (
-                        <button disabled className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-400 cursor-not-allowed">
-                          Giải trình ngay
-                        </button>
-                      )}
                     </td>
                   </tr>
                 ))}
@@ -363,11 +351,14 @@ export default function GiMSTChMCNg() {
             </form>
           </div>
         )}
+        {activeModal==='detail'&&selected&&(
+          <div onMouseDown={e=>{if(e.target===e.currentTarget){setActiveModal(null);setSelected(null)}}} className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/55 p-4"><section role="dialog" className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl"><header className="flex items-start justify-between border-b px-6 py-5"><div><div className="flex items-center gap-3"><h2 className="text-xl font-bold">Chi tiết phiếu giải trình</h2><span className={`rounded-full border px-3 py-1 text-xs font-semibold ${selected.status==='Đã giải trình'?'border-emerald-200 bg-emerald-50 text-emerald-700':'border-rose-200 bg-rose-50 text-rose-600'}`}>{selected.status}</span></div><p className="mt-2 text-sm font-semibold">Trần Thị Mai</p><p className="text-xs text-slate-500">Phòng: Kế toán　•　Chức vụ: Nhân viên chính thức</p></div><button onClick={()=>{setActiveModal(null);setSelected(null)}}><span className="material-symbols-outlined text-slate-400">close</span></button></header><div className="p-6"><h3 className="mb-4 border-l-4 border-blue-600 pl-3 text-sm font-bold uppercase">Thông tin phiếu</h3><div className="rounded-2xl border bg-slate-50 p-5"><div className="grid gap-5 sm:grid-cols-2"><div><p className="text-[11px] font-semibold uppercase text-slate-400">Loại phiếu</p><p className="mt-1 inline-flex rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700">Giải trình khiếu nại</p></div><div><p className="text-[11px] font-semibold uppercase text-slate-400">Ngày khiếu nại</p><p className="mt-2 font-semibold">{selected.date}</p></div></div><div className="my-4 border-t"/><div className="grid gap-4 sm:grid-cols-2"><div className="rounded-xl border bg-white p-4"><p className="text-[11px] font-semibold uppercase text-slate-400">Thời gian hệ thống</p><b className="mt-2 block">08:42:00</b><p className="mt-1 text-xs text-rose-500">● {selected.detail}</p></div><div className="rounded-xl border bg-white p-4"><p className="text-[11px] font-semibold uppercase text-slate-400">Thời gian thực tế</p><b className="mt-2 block">08:28:00</b></div></div><div className="my-4 border-t"/><p className="text-[11px] font-semibold uppercase text-slate-400">Lý do / Nội dung giải trình</p><p className="mt-2 rounded-xl border bg-white p-4 text-sm leading-6 text-slate-700">Do thiết bị quét vân tay không phản hồi, nhân viên đã chuyển sang thiết bị tại tầng khác để chấm công.</p>{selected.status==='Bị từ chối'&&<p className="mt-3 rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{selected.note||'Giải trình đã bị từ chối do chưa đủ thông tin xác minh.'}</p>}</div></div><footer className="flex justify-end border-t bg-slate-50 px-6 py-4"><button onClick={()=>{setActiveModal(null);setSelected(null)}} className="btn-secondary">Đóng</button></footer></section></div>
+        )}
       </div>
     );
   }
 
-  if (role === 'MANAGER') return <Navigate to="/dashboard" replace />;
+  if (role === 'MANAGER' || role === 'HR') return <Navigate to="/dashboard" replace />;
 
   if (role === 'ADMIN') return <Navigate to="/dashboard" replace />;
 

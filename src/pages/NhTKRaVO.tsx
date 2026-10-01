@@ -12,7 +12,11 @@ const teamRows:AccessRow[]=[
 export default function NhTKRaVO(){
  const {role}=useRole(); const manager=role==='MANAGER';
  const [logDate,setLogDate]=useState('2026-09-21');
- const person=manager?'Lê Hoàng Dũng':'Trần Thị Mai'; const code=manager?'BOS_DungLH_IT':'BOS_MaiTT_KT';
+ const person=manager?'Lê Hoàng Dũng':role==='HR'?'Trần Thị Mai':'Nguyễn Văn An';
+ const code=manager?'BOS_DungLH_IT':role==='HR'?'MaiTT-HR02':'AnNV-FE03';
+ const initials=manager?'LD':role==='HR'?'TM':'NA';
+ const position=manager?'Trưởng phòng IT':role==='HR'?'Quản trị viên / Nhân sự':'Nhân viên Kỹ thuật';
+ const department=manager?'Công nghệ thông tin':role==='HR'?'Nhân sự':'Frontend Development';
  const logs=[
   {time:'17:35:10',date:'21/09/2026',place:'Cửa chính - Tầng 4',device:'Quẹt thẻ',type:'Check-out'},
   {time:'13:30:22',date:'21/09/2026',place:'Cổng phụ - Tầng 1',device:'Quẹt vân tay',type:'Check-in'},
@@ -23,30 +27,32 @@ export default function NhTKRaVO(){
   {time:'13:15:40',date:'20/09/2026',place:'Cửa văn phòng - P.402',device:'Quẹt thẻ',type:'Check-in'},
   {time:'08:22:15',date:'20/09/2026',place:'Cửa chính - Tầng 4',device:'Quẹt vân tay',type:'Check-in'},
  ];
- const selectedDate=logDate.split('-').reverse().join('/');
- const visibleLogs=logs.filter(x=>x.date===selectedDate);
+ // The date control is an "up to date" filter in the supplied design.  Keeping
+ // earlier records visible also makes the initial 21/09 view match the mock-up.
+ const selectedTimestamp=new Date(`${logDate}T23:59:59`).getTime();
+ const visibleLogs=logs.filter(x=>{
+  const [day,month,year]=x.date.split('/').map(Number);
+  return new Date(year,month-1,day,23,59,59).getTime()<=selectedTimestamp;
+ });
 
- if(role==='EMPLOYEE') return (
+ if(role==='EMPLOYEE'||role==='MANAGER'||role==='HR') return (
   <div className="flex flex-col gap-6">
    {/* Profile section */}
    <div className="card px-6 py-5 flex items-center gap-5">
-    <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-700 text-lg font-bold text-white">NA</span>
+    <span className="flex h-[60px] w-[60px] shrink-0 items-center justify-center rounded-full bg-[#173b77] text-xl font-bold text-white">{initials}</span>
     <div>
      <div className="flex flex-wrap items-center gap-3">
-      <h2 className="text-lg font-bold text-slate-900">Nguyễn Văn An</h2>
-      <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">Mã NV: AnNV-FE03</span>
+      <h2 className="text-xl font-bold text-slate-900">{person}</h2>
+      <span className="inline-flex items-center rounded-full bg-[#315791] px-2.5 py-1 text-xs font-semibold text-white">Mã NV: {code}</span>
      </div>
-     <p className="mt-1 text-sm text-slate-500">Chức vụ: Nhân viên Kỹ thuật <span className="px-1 text-slate-300">•</span> Phòng ban: Frontend Development</p>
+     <p className="mt-1 text-sm text-slate-500">Chức vụ: {position} <span className="px-1 text-slate-300">•</span> Phòng ban: {department}</p>
     </div>
    </div>
 
    {/* Log table */}
    <div className="card overflow-hidden">
     <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
-     <div className="flex items-center gap-2 text-sm font-bold text-slate-900">
-      <span className="material-symbols-outlined text-[18px] text-slate-400">door_open</span>
-      Danh sách vào / ra
-     </div>
+     <div className="text-base font-bold text-slate-900">Danh sách vào / ra</div>
      <input
       aria-label="Lọc nhật ký theo ngày"
       type="date"

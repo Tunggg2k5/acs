@@ -23,6 +23,8 @@ import LichHop from './pages/LichHop';
 import Login from './pages/Login';
 import EmployeeTasks from './pages/EmployeeTasks';
 import ManagerTasks from './pages/ManagerTasks';
+import Register from './pages/Register';
+import InfoChangeApprovals from './pages/InfoChangeApprovals';
 import { useRole } from './context/RoleContext';
 
 function Protected({children}:{children:React.ReactNode}){const {authenticated}=useRole();return authenticated?<>{children}</>:<Navigate to="/login" replace/>}
@@ -37,6 +39,8 @@ export default function App() {
           <Routes>
             <Route path="/" element={<PublicHome />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/dang-ky" element={<Register />} />
+            <Route path="/duyet-thay-doi-thong-tin" element={<Protected><InfoChangeApprovals /></Protected>} />
             <Route path="/dashboard" element={<Protected><Dashboard /></Protected>} />
             <Route path="/cong-viec" element={<Protected><EmployeeTasks /></Protected>} />
             <Route path="/quan-ly-nhiem-vu" element={<Protected><ManagerTasks /></Protected>} />

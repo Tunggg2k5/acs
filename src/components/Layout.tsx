@@ -2,28 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useRole } from '../context/RoleContext';
 
-type Role = 'ADMIN' | 'MANAGER' | 'EMPLOYEE' | 'GUEST';
+type Role = 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE' | 'GUEST';
 
 const ROUTE_PERMISSIONS: Record<string, Role[]> = {
   '/qu-n-l-ng-i-d-ng':       ['ADMIN'],
   '/qu-n-l-t-ch-c':          ['ADMIN'],
+  '/duyet-thay-doi-thong-tin':['HR'],
   '/role-workflow':           ['ADMIN'],
   '/c-u-h-nh-audit-log':     ['ADMIN'],
-  '/danh-m-c-ca-ph-n-ca':    ['ADMIN', 'MANAGER'],
-  '/l-ch-l-m-vi-c':          ['ADMIN', 'MANAGER', 'EMPLOYEE'],
-  '/l-ch-tr-c-ph-n-c-ng-tr-c': ['ADMIN', 'MANAGER'],
-  '/i-ca':                   ['ADMIN', 'MANAGER', 'EMPLOYEE'],
-  '/nh-t-k-ra-v-o':          ['ADMIN', 'MANAGER', 'EMPLOYEE'],
-  '/nh-t-k-ra-v-o-quan-ly':  ['MANAGER'],
-  '/b-ng-c-ng':              ['ADMIN', 'MANAGER', 'EMPLOYEE'],
-  '/danh-sach-vi-pham':      ['MANAGER', 'EMPLOYEE'],
+  '/danh-m-c-ca-ph-n-ca':    ['ADMIN', 'HR', 'MANAGER'],
+  '/l-ch-l-m-vi-c':          ['HR', 'MANAGER', 'EMPLOYEE'],
+  '/l-ch-tr-c-ph-n-c-ng-tr-c': ['HR', 'MANAGER'],
+  '/i-ca':                   ['HR', 'MANAGER', 'EMPLOYEE'],
+  '/nh-t-k-ra-v-o':          ['HR', 'MANAGER', 'EMPLOYEE'],
+  '/nh-t-k-ra-v-o-quan-ly':  ['HR', 'MANAGER'],
+  '/b-ng-c-ng':              ['HR', 'MANAGER'],
+  '/danh-sach-vi-pham':      ['HR', 'MANAGER', 'EMPLOYEE'],
   '/i-u-ch-nh-c-ng':         ['ADMIN'],
-  '/qu-n-l-phi-u':           ['ADMIN', 'MANAGER', 'EMPLOYEE'],
-  '/c-ng-t-c-nh-m-c':       ['ADMIN', 'MANAGER', 'EMPLOYEE'],
-  '/h-s-c-nh-n':             ['ADMIN', 'MANAGER', 'EMPLOYEE'],
-  '/danh-s-ch-nh-n-vi-n':   ['ADMIN', 'MANAGER'],
-  '/lich-hop':               ['ADMIN', 'MANAGER', 'EMPLOYEE', 'GUEST'],
-  '/cong-viec':              ['EMPLOYEE'],
+  '/qu-n-l-phi-u':           ['HR', 'MANAGER', 'EMPLOYEE'],
+  '/c-ng-t-c-nh-m-c':       ['HR', 'MANAGER', 'EMPLOYEE'],
+  '/h-s-c-nh-n':             ['ADMIN', 'HR', 'MANAGER', 'EMPLOYEE'],
+  '/danh-s-ch-nh-n-vi-n':   ['ADMIN', 'HR', 'MANAGER', 'EMPLOYEE'],
+  '/lich-hop':               ['HR', 'MANAGER', 'EMPLOYEE', 'GUEST'],
+  '/cong-viec':              ['HR', 'MANAGER', 'EMPLOYEE'],
 };
 
 // ─── Nav Section Label ────────────────────────────────────────────────────────
@@ -278,7 +279,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return () => document.removeEventListener('mousedown', closeOnBackdrop);
   }, []);
 
-  if (location.pathname === '/login') return <>{children}</>;
+  if (location.pathname === '/login' || location.pathname === '/dang-ky') return <>{children}</>;
 
   const canAccess = (path: string) => {
     const allowed = ROUTE_PERMISSIONS[path];
@@ -323,6 +324,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     '/lich-hop': 'Quản lý lịch họp',
     '/qu-n-l-ng-i-d-ng': 'Quản lý người dùng',
     '/qu-n-l-t-ch-c': 'Quản lý tổ chức',
+    '/duyet-thay-doi-thong-tin': 'Duyệt thay đổi thông tin',
     '/role-workflow': 'Role & Workflow',
     '/c-u-h-nh-audit-log': 'Cấu hình & Audit Log',
     '/danh-m-c-ca-ph-n-ca': 'Danh mục ca & Phân ca',
@@ -344,7 +346,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const pageTitle = PAGE_TITLES[location.pathname] ?? 'ACS System';
 
   const userInfo = {
-    ADMIN:    { name: 'Trần Thị Mai',   title: 'Quản trị viên / Nhân sự', initials: 'TM', color: 'bg-blue-600' },
+    ADMIN:    { name: 'Nguyễn Tuấn Kiên', title: 'Super Admin',            initials: 'AD', color: 'bg-sky-500' },
+    HR:       { name: 'Lê Hoàng Dũng', title: 'Trưởng phòng IT',          initials: 'LD', color: 'bg-cyan-600' },
     MANAGER:  { name: 'Lê Hoàng Dũng', title: 'Trưởng phòng IT',          initials: 'LD', color: 'bg-indigo-600' },
     EMPLOYEE: { name: 'Trần Thị Mai',   title: 'Nhân viên',                initials: 'TM', color: 'bg-teal-600' },
     GUEST:    { name: 'Khách',           title: 'Chưa đăng nhập',           initials: 'K',  color: 'bg-slate-500' },
@@ -361,11 +364,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const isEmployee = role === 'EMPLOYEE';
   const isManager = role === 'MANAGER';
+  const isHR = role === 'HR';
   const isAdmin = role === 'ADMIN';
 
   // Role badge
   const roleBadge = isAdmin
     ? { label: 'Admin', cls: 'bg-blue-50 text-blue-700 border-blue-200' }
+    : isHR
+    ? { label: 'HR', cls: 'bg-purple-50 text-purple-700 border-purple-200' }
     : isManager
     ? { label: 'Manager', cls: 'bg-indigo-50 text-indigo-700 border-indigo-200' }
     : { label: 'Nhân viên', cls: 'bg-teal-50 text-teal-700 border-teal-200' };
@@ -396,23 +402,45 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <NavLink to="/dashboard" icon="space_dashboard" label="Tổng quan" />
               <NavLink to="/nh-t-k-ra-v-o" icon="login" label="Nhật ký ra vào" />
               <NavLink to="/qu-n-l-phi-u" icon="request_quote" label="Phiếu & Đơn từ" badge="2" />
-              <NavLink to="/lich-hop" icon="event" label="Quản lý lịch họp" />
-              <NavLink to="/cong-viec" icon="assignment_turned_in" label="Danh sách công việc" />
-              <NavLink to="/danh-sach-vi-pham" icon="warning_amber" label="Vi phạm của tôi" />
+              <NavLink to="/lich-hop" icon="event" label="Danh sách lịch họp" />
+              <NavLink to="/cong-viec" icon="assignment_turned_in" label="Danh sách nhiệm vụ" />
+              <NavLink to="/danh-sach-vi-pham" icon="warning_amber" label="Danh sách vi phạm của tôi" />
+              <NavLink to="/danh-s-ch-nh-n-vi-n" icon="groups" label="Danh sách nhân viên" />
             </>
           ) : isAdmin ? (
             <>
+              <NavSection label="Nhân sự" />
+              <NavLink to="/danh-s-ch-nh-n-vi-n" icon="groups" label="Danh sách nhân viên" />
+              <NavSection label="Quản trị hệ thống" />
+              <NavLink to="/qu-n-l-ng-i-d-ng" icon="manage_accounts" label="Quản lý tài khoản" />
+              <NavLink to="/role-workflow" icon="admin_panel_settings" label="Role & Permission" />
+              <NavLink to="/qu-n-l-t-ch-c" icon="domain" label="Cơ cấu phòng ban" />
+              <NavLink to="/qu-n-l-t-ch-c?tab=positions" icon="badge" label="Cấu hình chức vụ" />
+              <NavLink to="/qu-n-l-t-ch-c?tab=devices" icon="devices" label="Máy chấm công" />
+              <NavLink to="/c-u-h-nh-audit-log" icon="tune" label="Cấu hình hệ thống" />
+              <NavLink to="/c-u-h-nh-audit-log?tab=audit" icon="history" label="Audit Log" />
+              <NavLink to="/i-u-ch-nh-c-ng" icon="tune" label="Điều chỉnh công" />
+            </>
+          ) : isHR ? (
+            <>
               <NavLink to="/dashboard" icon="space_dashboard" label="Tổng quan" />
-              <NavLink to="/qu-n-l-ng-i-d-ng" icon="group" label="Người dùng" />
-
-              <NavSection label="Chấm công" />
-              <NavLink to="/nh-t-k-ra-v-o" icon="rule" label="Nhật ký ra vào" />
+              <NavLink to="/nh-t-k-ra-v-o" icon="login" label="Nhật ký ra vào" />
+              <NavLink to="/qu-n-l-phi-u?scope=mine" icon="request_quote" label="Phiếu & Đơn từ" />
+              <NavLink to="/lich-hop" icon="event" label="Danh sách lịch họp" />
+              <NavLink to="/cong-viec" icon="assignment_turned_in" label="Danh sách nhiệm vụ" />
+              <NavLink to="/danh-sach-vi-pham" icon="warning_amber" label="Danh sách vi phạm của tôi" />
+              <NavLink to="/danh-s-ch-nh-n-vi-n" icon="groups" label="Danh sách nhân viên" />
+              <div className="mt-4 flex items-center gap-2 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-blue-100">
+                <span className="material-symbols-outlined text-[17px]">manage_accounts</span>
+                <span className="flex-1">Quản lý</span>
+                <span className="material-symbols-outlined text-[16px]">expand_more</span>
+              </div>
+              <NavLink to="/l-ch-l-m-vi-c" icon="calendar_month" label="Quản lý lịch làm việc" />
+              <NavLink to="/qu-n-l-phi-u?scope=team" icon="assignment" label="Quản lý phiếu" />
               <NavLink to="/b-ng-c-ng" icon="table_chart" label="Bảng công" />
-              <NavLink to="/i-u-ch-nh-c-ng" icon="edit_calendar" label="Điều chỉnh công" />
-
-              <NavSection label="Phiếu & Đơn từ" />
-              <NavLink to="/qu-n-l-phi-u" icon="assignment" label="Quản lý phiếu" />
-              <NavLink to="/lich-hop" icon="event" label="Quản lý lịch họp" />
+              <NavLink to="/nh-t-k-ra-v-o-quan-ly" icon="login" label="Nhật ký ra vào nhân viên" />
+              <NavLink to="/danh-sach-vi-pham?scope=team" icon="warning_amber" label="Danh sách vi phạm chung" />
+              <NavLink to="/duyet-thay-doi-thong-tin" icon="verified_user" label="Duyệt thay đổi thông tin" />
             </>
           ) : isManager ? (
             <>
@@ -423,6 +451,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <NavLink to="/lich-hop" icon="event" label="Danh sách lịch họp" />
               <NavLink to="/cong-viec" icon="assignment_turned_in" label="Danh sách nhiệm vụ" />
               <NavLink to="/danh-sach-vi-pham" icon="warning_amber" label="Danh sách vi phạm của tôi" />
+              <NavLink to="/danh-s-ch-nh-n-vi-n" icon="groups" label="Danh sách nhân viên" />
 
               <NavSection label="Quản lý" />
               <NavLink to="/l-ch-l-m-vi-c" icon="calendar_month" label="Quản lý lịch làm việc" />
@@ -430,7 +459,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <NavLink to="/quan-ly-nhiem-vu" icon="task_alt" label="Quản lý nhiệm vụ" />
               <NavLink to="/b-ng-c-ng" icon="table_chart" label="Bảng công" />
               <NavLink to="/nh-t-k-ra-v-o-quan-ly" icon="login" label="Nhật ký ra vào" />
-              <NavLink to="/danh-s-ch-nh-n-vi-n" icon="groups" label="Danh sách nhân viên" />
               <NavLink to="/danh-sach-vi-pham?scope=team" icon="warning_amber" label="Danh sách vi phạm" />
             </>
           ) : (
@@ -475,7 +503,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Sidebar Footer – User */}
         <div className="border-t border-blue-800 px-3 py-3">
-          <AccountMenu userInfo={userInfo} showSettings={isAdmin} />
+          <AccountMenu userInfo={userInfo} showSettings={false} />
         </div>
       </aside>
 
