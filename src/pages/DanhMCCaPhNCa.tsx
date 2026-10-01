@@ -23,7 +23,7 @@ export default function DanhMCCaPhNCa() {
   const { role } = useRole();
   const [activeTab, setActiveTab] = useState<'TYPE' | 'ASSIGN'>('TYPE');
   const [search, setSearch] = useState('');
-  
+
   const [shiftTypes, setShiftTypes] = useState(SHIFT_TYPES);
   const [assigns, setAssigns] = useState(INIT_ASSIGNS);
 
@@ -204,11 +204,10 @@ export default function DanhMCCaPhNCa() {
                       <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 font-mono">{a.shiftCode}</span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold border ${
-                        a.status === 'Đã phân'
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold border ${a.status === 'Đã phân'
                           ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                           : 'bg-amber-50 text-amber-700 border-amber-200'
-                      }`}>
+                        }`}>
                         {a.status}
                       </span>
                     </td>

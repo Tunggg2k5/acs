@@ -4,44 +4,44 @@ import { useRole } from '../context/RoleContext';
 
 type Alert = { id: string; empId: string; name: string; dept: string; date: string; type: string; detail: string; severity: string };
 
-type ViolationRequest={id:string;empId:string;name:string;type:string;occurred:string;status:'Chờ duyệt'|'Đã duyệt'|'Chưa giải trình'|'Từ chối';content:string};
-const violationRequests:ViolationRequest[]=[
-  {id:'PH-2026-018',empId:'NV001',name:'Nguyễn Văn Minh',type:'Đi muộn (15p)',occurred:'26/09/2026 08:48',status:'Chờ duyệt',content:'Xe bị hỏng dọc đường tại đường Nguyễn Trãi nên đến văn phòng muộn 15 phút. Đã thông báo cho Leader qua tin nhắn Zalo trước ca làm việc.'},
-  {id:'PH-2026-019',empId:'NV002',name:'Lê Thu Hà',type:'Quên chấm công',occurred:'25/09/2026 17:30',status:'Đã duyệt',content:'Nhân viên quên thao tác chấm công khi rời văn phòng.'},
-  {id:'PH-2026-020',empId:'NV009',name:'Bùi Thị Hương',type:'Chưa check-out',occurred:'24/09/2026 18:00',status:'Chưa giải trình',content:'Hệ thống không ghi nhận dữ liệu check-out cuối ca.'},
-  {id:'PH-2026-021',empId:'NV014',name:'Trần Đức Thắng',type:'Đi muộn (35p)',occurred:'24/09/2026 09:05',status:'Từ chối',content:'Giải trình chưa cung cấp đủ thông tin xác minh.'},
-  {id:'PH-2026-022',empId:'NV022',name:'Đặng Tuấn Anh',type:'Quên chấm công',occurred:'23/09/2026 08:30',status:'Đã duyệt',content:'Thiết bị chấm công tại cửa chính tạm thời mất kết nối.'},
+type ViolationRequest = { id: string; empId: string; name: string; type: string; occurred: string; status: 'Chờ duyệt' | 'Đã duyệt' | 'Chưa giải trình' | 'Từ chối'; content: string };
+const violationRequests: ViolationRequest[] = [
+  { id: 'PH-2026-018', empId: 'NV001', name: 'Nguyễn Văn Minh', type: 'Đi muộn (15p)', occurred: '26/09/2026 08:48', status: 'Chờ duyệt', content: 'Xe bị hỏng dọc đường tại đường Nguyễn Trãi nên đến văn phòng muộn 15 phút. Đã thông báo cho Leader qua tin nhắn Zalo trước ca làm việc.' },
+  { id: 'PH-2026-019', empId: 'NV002', name: 'Lê Thu Hà', type: 'Quên chấm công', occurred: '25/09/2026 17:30', status: 'Đã duyệt', content: 'Nhân viên quên thao tác chấm công khi rời văn phòng.' },
+  { id: 'PH-2026-020', empId: 'NV009', name: 'Bùi Thị Hương', type: 'Chưa check-out', occurred: '24/09/2026 18:00', status: 'Chưa giải trình', content: 'Hệ thống không ghi nhận dữ liệu check-out cuối ca.' },
+  { id: 'PH-2026-021', empId: 'NV014', name: 'Trần Đức Thắng', type: 'Đi muộn (35p)', occurred: '24/09/2026 09:05', status: 'Từ chối', content: 'Giải trình chưa cung cấp đủ thông tin xác minh.' },
+  { id: 'PH-2026-022', empId: 'NV022', name: 'Đặng Tuấn Anh', type: 'Quên chấm công', occurred: '23/09/2026 08:30', status: 'Đã duyệt', content: 'Thiết bị chấm công tại cửa chính tạm thời mất kết nối.' },
 ];
 
-function ManagerViolationList(){
-  const [rows,setRows]=useState(violationRequests);const [selected,setSelected]=useState<ViolationRequest|null>(null);const [query,setQuery]=useState('');const [kind,setKind]=useState('Tất cả loại vi phạm');const [status,setStatus]=useState('Chờ duyệt');
-  const visible=rows.filter(x=>(!query||`${x.name} ${x.empId}`.toLowerCase().includes(query.toLowerCase()))&&(kind==='Tất cả loại vi phạm'||x.type.includes(kind))&&(status==='Tất cả trạng thái'||x.status===status));
-  const decide=(next:'Đã duyệt'|'Từ chối')=>{if(!selected)return;setRows(v=>v.map(x=>x.id===selected.id?{...x,status:next}:x));setSelected(null)};
-  const typeClass=(type:string)=>type.includes('Đi muộn')?'border-amber-200 bg-amber-50 text-amber-700':type.includes('Quên')?'border-rose-200 bg-rose-50 text-rose-600':'border-orange-200 bg-orange-50 text-orange-700';
-  const statusClass=(value:string)=>value==='Chờ duyệt'?'bg-amber-100 text-amber-700':value==='Đã duyệt'?'bg-emerald-100 text-emerald-700':value==='Từ chối'?'bg-rose-100 text-rose-600':'bg-slate-100 text-slate-600';
+function ManagerViolationList() {
+  const [rows, setRows] = useState(violationRequests); const [selected, setSelected] = useState<ViolationRequest | null>(null); const [query, setQuery] = useState(''); const [kind, setKind] = useState('Tất cả loại vi phạm'); const [status, setStatus] = useState('Chờ duyệt');
+  const visible = rows.filter(x => (!query || `${x.name} ${x.empId}`.toLowerCase().includes(query.toLowerCase())) && (kind === 'Tất cả loại vi phạm' || x.type.includes(kind)) && (status === 'Tất cả trạng thái' || x.status === status));
+  const decide = (next: 'Đã duyệt' | 'Từ chối') => { if (!selected) return; setRows(v => v.map(x => x.id === selected.id ? { ...x, status: next } : x)); setSelected(null) };
+  const typeClass = (type: string) => type.includes('Đi muộn') ? 'border-amber-200 bg-amber-50 text-amber-700' : type.includes('Quên') ? 'border-rose-200 bg-rose-50 text-rose-600' : 'border-orange-200 bg-orange-50 text-orange-700';
+  const statusClass = (value: string) => value === 'Chờ duyệt' ? 'bg-amber-100 text-amber-700' : value === 'Đã duyệt' ? 'bg-emerald-100 text-emerald-700' : value === 'Từ chối' ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-600';
   return <div className="min-h-full space-y-6 bg-[#F8FAFC] p-6">
     <h1 className="text-2xl font-bold text-slate-900">Danh sách vi phạm</h1>
-    <section className="rounded-xl border border-slate-200 bg-white p-4"><div className="grid gap-3 lg:grid-cols-[minmax(260px,1.5fr)_1fr_1fr_1fr_auto]"><div className="relative"><span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-slate-400">search</span><input value={query} onChange={e=>setQuery(e.target.value)} className="form-input pl-10" placeholder="Tên hoặc mã nhân viên"/></div><select value={kind} onChange={e=>setKind(e.target.value)} className="form-input"><option>Tất cả loại vi phạm</option><option>Đi muộn</option><option>Quên chấm công</option><option>Chưa check-out</option></select><select className="form-input"><option>Tất cả thời gian</option><option>Tháng 09/2026</option></select><select value={status} onChange={e=>setStatus(e.target.value)} className="form-input border-blue-500 font-semibold text-blue-700"><option>Chờ duyệt</option><option>Đã duyệt</option><option>Chưa giải trình</option><option>Từ chối</option><option>Tất cả trạng thái</option></select><button onClick={()=>{setQuery('');setKind('Tất cả loại vi phạm');setStatus('Chờ duyệt')}} className="btn-secondary px-3"><span className="material-symbols-outlined">refresh</span></button></div></section>
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white"><div className="overflow-x-auto"><table className="w-full min-w-[900px] text-left"><thead><tr className="table-header">{['STT','Mã NV','Họ tên','Loại vi phạm','Thời gian phát sinh','Trạng thái'].map(x=><th key={x} className="px-5 py-4">{x}</th>)}</tr></thead><tbody className="divide-y divide-slate-100">{visible.map((x,i)=><tr key={x.id} tabIndex={0} onClick={()=>setSelected(x)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' ')setSelected(x)}} className="cursor-pointer text-sm transition hover:bg-blue-50/40"><td className="px-5 py-5 text-slate-400">{String(i+1).padStart(2,'0')}</td><td className="px-5 py-5 font-semibold text-blue-600">{x.empId}</td><td className="px-5 py-5 font-semibold">{x.name}</td><td className="px-5 py-5"><span className={`rounded-md border px-3 py-1.5 text-xs font-semibold ${typeClass(x.type)}`}>● {x.type}</span></td><td className="px-5 py-5 font-mono text-slate-500">{x.occurred}</td><td className="px-5 py-5"><span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${statusClass(x.status)}`}>{x.status}</span></td></tr>)}{!visible.length&&<tr><td colSpan={6} className="px-5 py-16 text-center text-sm text-slate-400">Không có vi phạm phù hợp với bộ lọc</td></tr>}</tbody></table></div><footer className="flex justify-end gap-2 border-t p-4"><button className="h-9 w-9 rounded-lg border text-slate-400">‹</button><button className="h-9 w-9 rounded-lg bg-blue-600 font-semibold text-white">1</button><button className="h-9 w-9 rounded-lg border">2</button><button className="h-9 w-9 rounded-lg border">3</button><button className="h-9 w-9 rounded-lg border">›</button></footer></section>
-    {selected&&<div onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null)}} className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/55 p-4"><section className="w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-2xl"><header className="flex items-start justify-between border-b px-6 py-5"><div><h2 className="text-lg font-bold">Chi tiết yêu cầu chờ duyệt</h2><p className="mt-1 text-sm text-slate-400">{selected.id}　·　{selected.name}</p></div><button onClick={()=>setSelected(null)} className="text-xl text-slate-400">×</button></header><div className="grid grid-cols-2 gap-x-8 gap-y-5 p-6 text-sm"><div><span className="text-xs text-slate-400">Loại phiếu</span><b className="mt-1 block">Giải trình vi phạm</b></div><div><span className="text-xs text-slate-400">Trạng thái</span><span className={`mt-1 block w-fit rounded-full px-3 py-1 text-xs font-semibold ${statusClass(selected.status)}`}>{selected.status}</span></div><div><span className="text-xs text-slate-400">Thời gian phát sinh</span><b className="mt-1 block">{selected.occurred}</b></div><div><span className="text-xs text-slate-400">Loại sai lệch</span><b className="mt-1 block">{selected.type}</b></div><div><span className="text-xs text-slate-400">Nhân viên</span><b className="mt-1 block">{selected.name} ({selected.empId})</b></div><div><span className="text-xs text-slate-400">Người xử lý</span><p className="mt-1">Lê Hoàng Dũng</p></div><div className="col-span-2"><span className="text-xs text-slate-400">Nội dung giải trình</span><p className="mt-2 rounded-xl border bg-slate-50 p-4 leading-6 text-slate-600">{selected.content}</p></div></div><footer className="flex justify-end gap-3 border-t bg-slate-50 px-6 py-4">{selected.status==='Chờ duyệt'&&<><button onClick={()=>decide('Từ chối')} className="btn-danger">Từ chối đơn</button><button onClick={()=>decide('Đã duyệt')} className="btn-primary">Phê duyệt đơn</button></>} {selected.status!=='Chờ duyệt'&&<button onClick={()=>setSelected(null)} className="btn-primary">Đóng</button>}</footer></section></div>}
+    <section className="rounded-xl border border-slate-200 bg-white p-4"><div className="grid gap-3 lg:grid-cols-[minmax(260px,1.5fr)_1fr_1fr_1fr_auto]"><div className="relative"><span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-slate-400">search</span><input value={query} onChange={e => setQuery(e.target.value)} className="form-input pl-10" placeholder="Tên hoặc mã nhân viên" /></div><select value={kind} onChange={e => setKind(e.target.value)} className="form-input"><option>Tất cả loại vi phạm</option><option>Đi muộn</option><option>Quên chấm công</option><option>Chưa check-out</option></select><select className="form-input"><option>Tất cả thời gian</option><option>Tháng 09/2026</option></select><select value={status} onChange={e => setStatus(e.target.value)} className="form-input border-blue-500 font-semibold text-blue-700"><option>Chờ duyệt</option><option>Đã duyệt</option><option>Chưa giải trình</option><option>Từ chối</option><option>Tất cả trạng thái</option></select><button onClick={() => { setQuery(''); setKind('Tất cả loại vi phạm'); setStatus('Chờ duyệt') }} className="btn-secondary px-3"><span className="material-symbols-outlined">refresh</span></button></div></section>
+    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white"><div className="overflow-x-auto"><table className="w-full min-w-[900px] text-left"><thead><tr className="table-header">{['STT', 'Mã NV', 'Họ tên', 'Loại vi phạm', 'Thời gian phát sinh', 'Trạng thái'].map(x => <th key={x} className="px-5 py-4">{x}</th>)}</tr></thead><tbody className="divide-y divide-slate-100">{visible.map((x, i) => <tr key={x.id} tabIndex={0} onClick={() => setSelected(x)} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') setSelected(x) }} className="cursor-pointer text-sm transition hover:bg-blue-50/40"><td className="px-5 py-5 text-slate-400">{String(i + 1).padStart(2, '0')}</td><td className="px-5 py-5 font-semibold text-blue-600">{x.empId}</td><td className="px-5 py-5 font-semibold">{x.name}</td><td className="px-5 py-5"><span className={`rounded-md border px-3 py-1.5 text-xs font-semibold ${typeClass(x.type)}`}>● {x.type}</span></td><td className="px-5 py-5 font-mono text-slate-500">{x.occurred}</td><td className="px-5 py-5"><span className={`rounded-full px-3 py-1.5 text-xs font-semibold ${statusClass(x.status)}`}>{x.status}</span></td></tr>)}{!visible.length && <tr><td colSpan={6} className="px-5 py-16 text-center text-sm text-slate-400">Không có vi phạm phù hợp với bộ lọc</td></tr>}</tbody></table></div><footer className="flex justify-end gap-2 border-t p-4"><button className="h-9 w-9 rounded-lg border text-slate-400">‹</button><button className="h-9 w-9 rounded-lg bg-blue-600 font-semibold text-white">1</button><button className="h-9 w-9 rounded-lg border">2</button><button className="h-9 w-9 rounded-lg border">3</button><button className="h-9 w-9 rounded-lg border">›</button></footer></section>
+    {selected && <div onMouseDown={e => { if (e.target === e.currentTarget) setSelected(null) }} className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/55 p-4"><section className="w-full max-w-lg overflow-hidden rounded-xl bg-white shadow-2xl"><header className="flex items-start justify-between border-b px-6 py-5"><div><h2 className="text-lg font-bold">Chi tiết yêu cầu chờ duyệt</h2><p className="mt-1 text-sm text-slate-400">{selected.id}　·　{selected.name}</p></div><button onClick={() => setSelected(null)} className="text-xl text-slate-400">×</button></header><div className="grid grid-cols-2 gap-x-8 gap-y-5 p-6 text-sm"><div><span className="text-xs text-slate-400">Loại phiếu</span><b className="mt-1 block">Giải trình vi phạm</b></div><div><span className="text-xs text-slate-400">Trạng thái</span><span className={`mt-1 block w-fit rounded-full px-3 py-1 text-xs font-semibold ${statusClass(selected.status)}`}>{selected.status}</span></div><div><span className="text-xs text-slate-400">Thời gian phát sinh</span><b className="mt-1 block">{selected.occurred}</b></div><div><span className="text-xs text-slate-400">Loại sai lệch</span><b className="mt-1 block">{selected.type}</b></div><div><span className="text-xs text-slate-400">Nhân viên</span><b className="mt-1 block">{selected.name} ({selected.empId})</b></div><div><span className="text-xs text-slate-400">Người xử lý</span><p className="mt-1">Lê Hoàng Dũng</p></div><div className="col-span-2"><span className="text-xs text-slate-400">Nội dung giải trình</span><p className="mt-2 rounded-xl border bg-slate-50 p-4 leading-6 text-slate-600">{selected.content}</p></div></div><footer className="flex justify-end gap-3 border-t bg-slate-50 px-6 py-4">{selected.status === 'Chờ duyệt' && <><button onClick={() => decide('Từ chối')} className="btn-danger">Từ chối đơn</button><button onClick={() => decide('Đã duyệt')} className="btn-primary">Phê duyệt đơn</button></>} {selected.status !== 'Chờ duyệt' && <button onClick={() => setSelected(null)} className="btn-primary">Đóng</button>}</footer></section></div>}
   </div>;
 }
 
 const allAlerts: Alert[] = [
-  { id: 'AL-001', empId: 'NV002', name: 'Lê Thanh Bình',   dept: 'Phòng IT',  date: '26/10/2023', type: 'Đi muộn',    detail: 'Vào 08:14 (muộn 14 phút)', severity: 'Cảnh báo' },
-  { id: 'AL-002', empId: 'NV005', name: 'Phạm Thị Lan',    dept: 'Phòng HR',  date: '26/10/2023', type: 'Thiếu công', detail: 'Không có check-out',         severity: 'Nghiêm trọng' },
-  { id: 'AL-003', empId: 'NV004', name: 'Nguyễn Văn Hùng', dept: 'Phòng IT',  date: '25/10/2023', type: 'Về sớm',     detail: 'Ra về 16:30 (sớm 30 phút)', severity: 'Cảnh báo' },
-  { id: 'AL-004', empId: 'NV003', name: 'Trần Thị Mai',    dept: 'Phòng KT',  date: '24/10/2023', type: 'Đi muộn',    detail: 'Vào 13:20 (muộn 20 phút)', severity: 'Cảnh báo' },
+  { id: 'AL-001', empId: 'NV002', name: 'Lê Thanh Bình', dept: 'Phòng IT', date: '26/10/2023', type: 'Đi muộn', detail: 'Vào 08:14 (muộn 14 phút)', severity: 'Cảnh báo' },
+  { id: 'AL-002', empId: 'NV005', name: 'Phạm Thị Lan', dept: 'Phòng HR', date: '26/10/2023', type: 'Thiếu công', detail: 'Không có check-out', severity: 'Nghiêm trọng' },
+  { id: 'AL-003', empId: 'NV004', name: 'Nguyễn Văn Hùng', dept: 'Phòng IT', date: '25/10/2023', type: 'Về sớm', detail: 'Ra về 16:30 (sớm 30 phút)', severity: 'Cảnh báo' },
+  { id: 'AL-004', empId: 'NV003', name: 'Trần Thị Mai', dept: 'Phòng KT', date: '24/10/2023', type: 'Đi muộn', detail: 'Vào 13:20 (muộn 20 phút)', severity: 'Cảnh báo' },
 ];
 
-function ManagerAttendanceMonitor(){
-  const [rows,setRows]=useState([allAlerts[0],allAlerts[2]]);
-  const [query,setQuery]=useState('');
-  const [kind,setKind]=useState('Tất cả loại vi phạm');
-  const [range,setRange]=useState('Hôm nay');
-  const [explanation,setExplanation]=useState<Alert|null>(null);
-  const visible=rows.filter(x=>(kind==='Tất cả loại vi phạm'||x.type===kind)&&`${x.name} ${x.empId}`.toLowerCase().includes(query.toLowerCase()));
-  const resolve=(id:string)=>setRows(v=>v.filter(x=>x.id!==id));
+function ManagerAttendanceMonitor() {
+  const [rows, setRows] = useState([allAlerts[0], allAlerts[2]]);
+  const [query, setQuery] = useState('');
+  const [kind, setKind] = useState('Tất cả loại vi phạm');
+  const [range, setRange] = useState('Hôm nay');
+  const [explanation, setExplanation] = useState<Alert | null>(null);
+  const visible = rows.filter(x => (kind === 'Tất cả loại vi phạm' || x.type === kind) && `${x.name} ${x.empId}`.toLowerCase().includes(query.toLowerCase()));
+  const resolve = (id: string) => setRows(v => v.filter(x => x.id !== id));
   return (
     <div className="flex flex-col gap-6 p-6">
       {/* Page Header */}
@@ -52,8 +52,8 @@ function ManagerAttendanceMonitor(){
         </div>
         <div className="flex items-center gap-3">
           <div className="flex rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
-            {['Hôm nay','Tuần này','Tháng này'].map(x=>(
-              <button key={x} onClick={()=>setRange(x)} className={`rounded-lg px-4 py-2 text-sm font-medium transition ${range===x?'bg-blue-600 text-white shadow-sm':'text-slate-600 hover:bg-slate-50'}`}>{x}</button>
+            {['Hôm nay', 'Tuần này', 'Tháng này'].map(x => (
+              <button key={x} onClick={() => setRange(x)} className={`rounded-lg px-4 py-2 text-sm font-medium transition ${range === x ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'}`}>{x}</button>
             ))}
           </div>
           <button className="btn-secondary">
@@ -68,18 +68,18 @@ function ManagerAttendanceMonitor(){
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative flex-1 min-w-[200px]">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[16px] text-slate-400">search</span>
-            <input value={query} onChange={e=>setQuery(e.target.value)} className="form-input pl-9" placeholder="Tìm tên hoặc mã nhân viên..."/>
+            <input value={query} onChange={e => setQuery(e.target.value)} className="form-input pl-9" placeholder="Tìm tên hoặc mã nhân viên..." />
           </div>
-          <select value={kind} onChange={e=>setKind(e.target.value)} className="form-input w-auto">
+          <select value={kind} onChange={e => setKind(e.target.value)} className="form-input w-auto">
             <option>Tất cả loại vi phạm</option>
             <option>Đi muộn</option>
             <option>Về sớm</option>
           </select>
-          <button onClick={()=>window.alert('Đã xuất Excel')} className="btn-secondary">
+          <button onClick={() => window.alert('Đã xuất Excel')} className="btn-secondary">
             <span className="material-symbols-outlined text-[18px]">download</span>
             Xuất Excel
           </button>
-          <button onClick={()=>{setQuery('');setKind('Tất cả loại vi phạm')}} className="btn-primary">
+          <button onClick={() => { setQuery(''); setKind('Tất cả loại vi phạm') }} className="btn-primary">
             <span className="material-symbols-outlined text-[18px]">refresh</span>
             Làm mới
           </button>
@@ -91,17 +91,17 @@ function ManagerAttendanceMonitor(){
         <table className="w-full text-left">
           <thead>
             <tr className="table-header">
-              {['Nhân viên','Ngày','Loại vi phạm','Chi tiết chấm công','Đơn giải trình','Xử lý'].map(x=>(
+              {['Nhân viên', 'Ngày', 'Loại vi phạm', 'Chi tiết chấm công', 'Đơn giải trình', 'Xử lý'].map(x => (
                 <th key={x} className="px-4 py-3">{x}</th>
               ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {visible.map((x,i)=>(
+            {visible.map((x, i) => (
               <tr key={x.id} className="text-sm hover:bg-slate-50 transition">
                 <td className="px-4 py-3">
                   <div className="font-semibold text-slate-900">{x.name}</div>
-                  <div className="text-xs text-slate-400">Mã NV: {x.empId} · {x.dept.replace('Phòng IT','Ban Công nghệ').replace('Phòng KT','Phòng Kỹ thuật')}</div>
+                  <div className="text-xs text-slate-400">Mã NV: {x.empId} · {x.dept.replace('Phòng IT', 'Ban Công nghệ').replace('Phòng KT', 'Phòng Kỹ thuật')}</div>
                 </td>
                 <td className="px-4 py-3 font-medium text-slate-700">{x.date}</td>
                 <td className="px-4 py-3 font-semibold text-slate-800">{x.type}</td>
@@ -112,8 +112,8 @@ function ManagerAttendanceMonitor(){
                   </div>
                 </td>
                 <td className="px-4 py-3">
-                  {i===0 ? (
-                    <button onClick={()=>setExplanation(x)} className="badge-blue cursor-pointer hover:bg-blue-100 transition">
+                  {i === 0 ? (
+                    <button onClick={() => setExplanation(x)} className="badge-blue cursor-pointer hover:bg-blue-100 transition">
                       <span className="material-symbols-outlined text-[14px]">description</span>
                       Có giải trình
                     </button>
@@ -121,12 +121,12 @@ function ManagerAttendanceMonitor(){
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
-                    {i===0 ? (
+                    {i === 0 ? (
                       <>
-                        <button onClick={()=>resolve(x.id)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition" title="Chấp thuận">
+                        <button onClick={() => resolve(x.id)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition" title="Chấp thuận">
                           <span className="material-symbols-outlined text-[18px]">check</span>
                         </button>
-                        <button onClick={()=>resolve(x.id)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-500 hover:bg-red-100 transition" title="Từ chối">
+                        <button onClick={() => resolve(x.id)} className="flex h-8 w-8 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-500 hover:bg-red-100 transition" title="Từ chối">
                           <span className="material-symbols-outlined text-[18px]">close</span>
                         </button>
                       </>
@@ -164,7 +164,7 @@ function ManagerAttendanceMonitor(){
                   <p className="mt-0.5 text-xs text-slate-400">Gửi lúc 08:35, 26/10/2023</p>
                 </div>
               </div>
-              <button onClick={()=>setExplanation(null)} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
+              <button onClick={() => setExplanation(null)} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
                 <span className="material-symbols-outlined text-[18px]">close</span>
               </button>
             </header>
@@ -211,7 +211,7 @@ function ManagerAttendanceMonitor(){
               </div>
               <div>
                 <label className="form-label">Ý kiến phản hồi / Ghi chú của quản lý</label>
-                <textarea rows={2} className="form-input resize-none" placeholder="Nhập lý do chấp thuận hoặc lý do từ chối giải trình..."/>
+                <textarea rows={2} className="form-input resize-none" placeholder="Nhập lý do chấp thuận hoặc lý do từ chối giải trình..." />
               </div>
             </div>
             <footer className="flex items-center gap-3 border-t border-slate-100 bg-slate-50/70 px-6 py-4">
@@ -219,11 +219,11 @@ function ManagerAttendanceMonitor(){
                 <span className="material-symbols-outlined text-[18px]">info</span>
                 Yêu cầu bổ sung thông tin
               </button>
-              <button onClick={()=>{resolve(explanation.id);setExplanation(null)}} className="btn-danger">
+              <button onClick={() => { resolve(explanation.id); setExplanation(null) }} className="btn-danger">
                 <span className="material-symbols-outlined text-[18px]">close</span>
                 Từ chối giải trình
               </button>
-              <button onClick={()=>{resolve(explanation.id);setExplanation(null)}} className="btn-primary ml-auto bg-emerald-600 hover:bg-emerald-700">
+              <button onClick={() => { resolve(explanation.id); setExplanation(null) }} className="btn-primary ml-auto bg-emerald-600 hover:bg-emerald-700">
                 <span className="material-symbols-outlined text-[18px]">check</span>
                 Chấp thuận & Hủy vi phạm
               </button>
@@ -247,11 +247,11 @@ export default function GiMSTChMCNg() {
 
   if (role === 'EMPLOYEE' || ((role === 'MANAGER' || role === 'HR') && !managerView)) {
     const mine = [
-      { id:'VP-01', date:'18/09/2026', type:'Đi muộn', detail:'Check-in lúc 08:42, muộn 12 phút', status:'Chờ giải trình', note:'' },
-      { id:'VP-02', date:'15/09/2026', type:'Đi muộn', detail:'Check-in lúc 09:15, muộn 45 phút', status:'Bị từ chối', note:'Lý do từ chối: Giải trình không có minh chứng hợp lệ' },
-      { id:'VP-03', date:'12/09/2026', type:'Quên check-out', detail:'Không có dữ liệu check-out ca chiều', status:'Đã giải trình', note:'' },
-      { id:'VP-04', date:'05/09/2026', type:'Về sớm', detail:'Check-out lúc 16:40 (sớm 50 phút)', status:'Bị từ chối', note:'' },
-      { id:'VP-05', date:'02/09/2026', type:'Quên check-in', detail:'Không có dữ liệu check-in ca sáng', status:'Đã giải trình', note:'' },
+      { id: 'VP-01', date: '18/09/2026', type: 'Đi muộn', detail: 'Check-in lúc 08:42, muộn 12 phút', status: 'Chờ giải trình', note: '' },
+      { id: 'VP-02', date: '15/09/2026', type: 'Đi muộn', detail: 'Check-in lúc 09:15, muộn 45 phút', status: 'Bị từ chối', note: 'Lý do từ chối: Giải trình không có minh chứng hợp lệ' },
+      { id: 'VP-03', date: '12/09/2026', type: 'Quên check-out', detail: 'Không có dữ liệu check-out ca chiều', status: 'Đã giải trình', note: '' },
+      { id: 'VP-04', date: '05/09/2026', type: 'Về sớm', detail: 'Check-out lúc 16:40 (sớm 50 phút)', status: 'Bị từ chối', note: '' },
+      { id: 'VP-05', date: '02/09/2026', type: 'Quên check-in', detail: 'Không có dữ liệu check-in ca sáng', status: 'Đã giải trình', note: '' },
     ];
     return (
       <div className="flex flex-col gap-6 p-6">
@@ -280,15 +280,15 @@ export default function GiMSTChMCNg() {
             <table className="w-full min-w-[900px] text-left">
               <thead>
                 <tr className="table-header">
-                  {['STT','Ngày','Loại vi phạm','Chi tiết','Trạng thái'].map(x=>(
+                  {['STT', 'Ngày', 'Loại vi phạm', 'Chi tiết', 'Trạng thái'].map(x => (
                     <th key={x} className="px-4 py-3">{x}</th>
                   ))}
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {mine.map((x,index)=>(
-                  <tr key={x.id} onClick={()=>{setSelected(x);if(x.status==='Chờ giải trình')setActiveModal('complaint');else if(x.status==='Bị từ chối'||x.status==='Đã giải trình')setActiveModal('detail')}} className="cursor-pointer text-sm hover:bg-blue-50/50 transition">
-                    <td className="px-4 py-3 text-slate-400">{index+1}</td>
+                {mine.map((x, index) => (
+                  <tr key={x.id} onClick={() => { setSelected(x); if (x.status === 'Chờ giải trình') setActiveModal('complaint'); else if (x.status === 'Bị từ chối' || x.status === 'Đã giải trình') setActiveModal('detail') }} className="cursor-pointer text-sm hover:bg-blue-50/50 transition">
+                    <td className="px-4 py-3 text-slate-400">{index + 1}</td>
                     <td className="px-4 py-3 font-semibold text-slate-900">{x.date}</td>
                     <td className="px-4 py-3 text-slate-700">{x.type}</td>
                     <td className="px-4 py-3 text-slate-600">
@@ -296,7 +296,7 @@ export default function GiMSTChMCNg() {
                       {x.note && <p className="mt-1 text-xs text-red-500">{x.note}</p>}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold border ${x.status==='Đã giải trình'?'bg-emerald-50 text-emerald-700 border-emerald-200':x.status==='Bị từ chối'?'bg-red-50 text-red-600 border-red-200':'bg-amber-50 text-amber-700 border-amber-200'}`}>
+                      <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold border ${x.status === 'Đã giải trình' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : x.status === 'Bị từ chối' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}`}>
                         {x.status}
                       </span>
                     </td>
@@ -308,41 +308,41 @@ export default function GiMSTChMCNg() {
         </div>
 
         {/* Complaint Modal */}
-        {activeModal==='complaint' && selected && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm" onMouseDown={e=>{if(e.target===e.currentTarget){setActiveModal(null);setSelected(null)}}}>
-            <form onSubmit={e=>{e.preventDefault();setActiveModal(null);setSelected(null);window.alert('Đã gửi giải trình')}} className="w-full max-w-[620px] overflow-hidden rounded-2xl bg-white shadow-xl animate-scale-in">
+        {activeModal === 'complaint' && selected && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm" onMouseDown={e => { if (e.target === e.currentTarget) { setActiveModal(null); setSelected(null) } }}>
+            <form onSubmit={e => { e.preventDefault(); setActiveModal(null); setSelected(null); window.alert('Đã gửi giải trình') }} className="w-full max-w-[620px] overflow-hidden rounded-2xl bg-white shadow-xl animate-scale-in">
               <header className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
                 <div>
                   <h2 className="text-base font-bold text-slate-900">Khiếu nại thời gian làm việc</h2>
                 </div>
-                <button type="button" onClick={()=>{setActiveModal(null);setSelected(null)}} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
+                <button type="button" onClick={() => { setActiveModal(null); setSelected(null) }} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100">
                   <span className="material-symbols-outlined text-[18px]">close</span>
                 </button>
               </header>
               <div className="space-y-4 p-6">
                 <div>
                   <label className="form-label">Chọn loại vi phạm</label>
-                  <input readOnly value={`${selected.type} / Về sớm (08:42)`} className="form-input bg-slate-50 cursor-not-allowed"/>
+                  <input readOnly value={`${selected.type} / Về sớm (08:42)`} className="form-input bg-slate-50 cursor-not-allowed" />
                 </div>
                 <div>
                   <label className="form-label">Ngày khiếu nại <span className="text-red-500">*</span></label>
-                  <input readOnly value={selected.date} className="form-input bg-slate-50 cursor-not-allowed"/>
+                  <input readOnly value={selected.date} className="form-input bg-slate-50 cursor-not-allowed" />
                 </div>
                 <div>
                   <label className="form-label">Thời gian hệ thống thông báo <span className="text-red-500">*</span></label>
-                  <textarea readOnly value="08:42:00 (Đi muộn 12 phút - Ca sáng 08:30)" rows={2} className="form-input resize-none bg-slate-50 cursor-not-allowed"/>
+                  <textarea readOnly value="08:42:00 (Đi muộn 12 phút - Ca sáng 08:30)" rows={2} className="form-input resize-none bg-slate-50 cursor-not-allowed" />
                 </div>
                 <div>
                   <label className="form-label">Thời gian thực tế <span className="text-red-500">*</span></label>
-                  <textarea required rows={3} className="form-input resize-none" placeholder="Nhập thời gian thực tế... (Bạn cần ghi rõ địa điểm, khoảng thời gian quẹt thẻ xác nhận.)"/>
+                  <textarea required rows={3} className="form-input resize-none" placeholder="Nhập thời gian thực tế... (Bạn cần ghi rõ địa điểm, khoảng thời gian quẹt thẻ xác nhận.)" />
                 </div>
                 <div>
                   <label className="form-label">Lý do <span className="text-red-500">*</span></label>
-                  <textarea required rows={3} className="form-input resize-none" placeholder="Nhập lý do khiếu nại..."/>
+                  <textarea required rows={3} className="form-input resize-none" placeholder="Nhập lý do khiếu nại..." />
                 </div>
               </div>
               <footer className="flex justify-end gap-3 border-t border-slate-100 bg-slate-50/70 px-6 py-4">
-                <button type="button" onClick={()=>{setActiveModal(null);setSelected(null)}} className="btn-secondary">Hủy</button>
+                <button type="button" onClick={() => { setActiveModal(null); setSelected(null) }} className="btn-secondary">Hủy</button>
                 <button className="btn-primary">
                   <span className="material-symbols-outlined text-[18px]">send</span>
                   Gửi khiếu nại
@@ -351,8 +351,8 @@ export default function GiMSTChMCNg() {
             </form>
           </div>
         )}
-        {activeModal==='detail'&&selected&&(
-          <div onMouseDown={e=>{if(e.target===e.currentTarget){setActiveModal(null);setSelected(null)}}} className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/55 p-4"><section role="dialog" className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl"><header className="flex items-start justify-between border-b px-6 py-5"><div><div className="flex items-center gap-3"><h2 className="text-xl font-bold">Chi tiết phiếu giải trình</h2><span className={`rounded-full border px-3 py-1 text-xs font-semibold ${selected.status==='Đã giải trình'?'border-emerald-200 bg-emerald-50 text-emerald-700':'border-rose-200 bg-rose-50 text-rose-600'}`}>{selected.status}</span></div><p className="mt-2 text-sm font-semibold">Trần Thị Mai</p><p className="text-xs text-slate-500">Phòng: Kế toán　•　Chức vụ: Nhân viên chính thức</p></div><button onClick={()=>{setActiveModal(null);setSelected(null)}}><span className="material-symbols-outlined text-slate-400">close</span></button></header><div className="p-6"><h3 className="mb-4 border-l-4 border-blue-600 pl-3 text-sm font-bold uppercase">Thông tin phiếu</h3><div className="rounded-2xl border bg-slate-50 p-5"><div className="grid gap-5 sm:grid-cols-2"><div><p className="text-[11px] font-semibold uppercase text-slate-400">Loại phiếu</p><p className="mt-1 inline-flex rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700">Giải trình khiếu nại</p></div><div><p className="text-[11px] font-semibold uppercase text-slate-400">Ngày khiếu nại</p><p className="mt-2 font-semibold">{selected.date}</p></div></div><div className="my-4 border-t"/><div className="grid gap-4 sm:grid-cols-2"><div className="rounded-xl border bg-white p-4"><p className="text-[11px] font-semibold uppercase text-slate-400">Thời gian hệ thống</p><b className="mt-2 block">08:42:00</b><p className="mt-1 text-xs text-rose-500">● {selected.detail}</p></div><div className="rounded-xl border bg-white p-4"><p className="text-[11px] font-semibold uppercase text-slate-400">Thời gian thực tế</p><b className="mt-2 block">08:28:00</b></div></div><div className="my-4 border-t"/><p className="text-[11px] font-semibold uppercase text-slate-400">Lý do / Nội dung giải trình</p><p className="mt-2 rounded-xl border bg-white p-4 text-sm leading-6 text-slate-700">Do thiết bị quét vân tay không phản hồi, nhân viên đã chuyển sang thiết bị tại tầng khác để chấm công.</p>{selected.status==='Bị từ chối'&&<p className="mt-3 rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{selected.note||'Giải trình đã bị từ chối do chưa đủ thông tin xác minh.'}</p>}</div></div><footer className="flex justify-end border-t bg-slate-50 px-6 py-4"><button onClick={()=>{setActiveModal(null);setSelected(null)}} className="btn-secondary">Đóng</button></footer></section></div>
+        {activeModal === 'detail' && selected && (
+          <div onMouseDown={e => { if (e.target === e.currentTarget) { setActiveModal(null); setSelected(null) } }} className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/55 p-4"><section role="dialog" className="w-full max-w-3xl overflow-hidden rounded-2xl bg-white shadow-2xl"><header className="flex items-start justify-between border-b px-6 py-5"><div><div className="flex items-center gap-3"><h2 className="text-xl font-bold">Chi tiết phiếu giải trình</h2><span className={`rounded-full border px-3 py-1 text-xs font-semibold ${selected.status === 'Đã giải trình' ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-rose-200 bg-rose-50 text-rose-600'}`}>{selected.status}</span></div><p className="mt-2 text-sm font-semibold">Trần Thị Mai</p><p className="text-xs text-slate-500">Phòng: Kế toán　•　Chức vụ: Nhân viên chính thức</p></div><button onClick={() => { setActiveModal(null); setSelected(null) }}><span className="material-symbols-outlined text-slate-400">close</span></button></header><div className="p-6"><h3 className="mb-4 border-l-4 border-blue-600 pl-3 text-sm font-bold uppercase">Thông tin phiếu</h3><div className="rounded-2xl border bg-slate-50 p-5"><div className="grid gap-5 sm:grid-cols-2"><div><p className="text-[11px] font-semibold uppercase text-slate-400">Loại phiếu</p><p className="mt-1 inline-flex rounded-lg border border-blue-200 bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700">Giải trình khiếu nại</p></div><div><p className="text-[11px] font-semibold uppercase text-slate-400">Ngày khiếu nại</p><p className="mt-2 font-semibold">{selected.date}</p></div></div><div className="my-4 border-t" /><div className="grid gap-4 sm:grid-cols-2"><div className="rounded-xl border bg-white p-4"><p className="text-[11px] font-semibold uppercase text-slate-400">Thời gian hệ thống</p><b className="mt-2 block">08:42:00</b><p className="mt-1 text-xs text-rose-500">● {selected.detail}</p></div><div className="rounded-xl border bg-white p-4"><p className="text-[11px] font-semibold uppercase text-slate-400">Thời gian thực tế</p><b className="mt-2 block">08:28:00</b></div></div><div className="my-4 border-t" /><p className="text-[11px] font-semibold uppercase text-slate-400">Lý do / Nội dung giải trình</p><p className="mt-2 rounded-xl border bg-white p-4 text-sm leading-6 text-slate-700">Do thiết bị quét vân tay không phản hồi, nhân viên đã chuyển sang thiết bị tại tầng khác để chấm công.</p>{selected.status === 'Bị từ chối' && <p className="mt-3 rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{selected.note || 'Giải trình đã bị từ chối do chưa đủ thông tin xác minh.'}</p>}</div></div><footer className="flex justify-end border-t bg-slate-50 px-6 py-4"><button onClick={() => { setActiveModal(null); setSelected(null) }} className="btn-secondary">Đóng</button></footer></section></div>
         )}
       </div>
     );
@@ -380,7 +380,7 @@ export default function GiMSTChMCNg() {
             {myAlerts.filter(a => a.severity === 'Nghiêm trọng').length} cần xử lý
           </span>
           {role === 'ADMIN' && (
-            <button onClick={()=>window.alert('Đã xuất báo cáo giám sát')} className="btn-secondary">
+            <button onClick={() => window.alert('Đã xuất báo cáo giám sát')} className="btn-secondary">
               <span className="material-symbols-outlined text-[18px]">download</span>
               Xuất báo cáo
             </button>
@@ -391,8 +391,8 @@ export default function GiMSTChMCNg() {
       {/* Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
-          { label: 'Nghiêm trọng', count: myAlerts.filter(a=>a.severity==='Nghiêm trọng').length, icon: 'error', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-500' },
-          { label: 'Cảnh báo', count: myAlerts.filter(a=>a.severity==='Cảnh báo').length, icon: 'warning', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-500' },
+          { label: 'Nghiêm trọng', count: myAlerts.filter(a => a.severity === 'Nghiêm trọng').length, icon: 'error', color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-500' },
+          { label: 'Cảnh báo', count: myAlerts.filter(a => a.severity === 'Cảnh báo').length, icon: 'warning', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-500' },
           { label: 'Tổng vi phạm', count: myAlerts.length, icon: 'monitor_heart', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-500' },
         ].map(c => (
           <div key={c.label} className={`card p-5 border-l-4 ${c.border}`}>

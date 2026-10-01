@@ -9,11 +9,11 @@ type Record_ = {
 };
 
 const INIT_RECORDS: Record_[] = [
-  { empId:'NV0092', name:'Vũ Minh Tuấn',   dept:'Phát triển Phần mềm',  date:'18/10/2023', checkInOrig:'08:48', checkOutOrig:'17:32', checkInAdj:'08:30', checkOutAdj:'17:32', adjBy:'Nguyễn Văn An', reason:'Lỗi công quẹt vận tay cửa phòng tầng 1, trưởng bộ phận xác nhận mặt tại văn phòng lúc 08:28.',      status:'Đã can thiệp' },
-  { empId:'NV0104', name:'Lê Thị Mai',      dept:'Tài chính Kế toán',    date:'18/10/2023', checkInOrig:'08:25', checkOutOrig:'—:—',   checkInAdj:'08:25', checkOutAdj:'17:35', adjBy:'Trần Hoàng Yên', reason:'Quên chấm công chiều do họp đột xuất tại phòng Giám đốc. Có biên bản họp xác nhận.',               status:'Đã can thiệp' },
-  { empId:'NV0045', name:'Đỗ Hữu Thắng',   dept:'Kinh doanh Khối B2B', date:'17/10/2023', checkInOrig:'—:—',   checkOutOrig:'—:—',   checkInAdj:'—:—',   checkOutAdj:'—:—',   adjBy:'—',             reason:'Chưa có điều chỉnh',                                                                                       status:'Chờ xử lý' },
-  { empId:'NV0188', name:'Phạm Thu Trang',  dept:'Nhân sự & Tuyển dụng', date:'16/10/2023', checkInOrig:'08:15', checkOutOrig:'16:10', checkInAdj:'08:15', checkOutAdj:'17:30', adjBy:'Nguyễn Văn An', reason:'Được duyệt ra sớm 1h làm việc bù theo giấy điều chuyển công tác đã được phê duyệt trước đó.',        status:'Đã can thiệp' },
-  { empId:'NV0055', name:'Hoàng Văn Phúc',  dept:'Kỹ thuật',             date:'16/10/2023', checkInOrig:'09:12', checkOutOrig:'17:00', checkInAdj:'08:00', checkOutAdj:'17:00', adjBy:'Nguyễn Văn An', reason:'Nhân viên có mặt đúng giờ nhưng thiết bị máy chấm công tầng 2 bị lỗi cảm biến từ 07:50 - 09:05.',   status:'Đã can thiệp' },
+  { empId: 'NV0092', name: 'Vũ Minh Tuấn', dept: 'Phát triển Phần mềm', date: '18/10/2023', checkInOrig: '08:48', checkOutOrig: '17:32', checkInAdj: '08:30', checkOutAdj: '17:32', adjBy: 'Nguyễn Văn An', reason: 'Lỗi công quẹt vận tay cửa phòng tầng 1, trưởng bộ phận xác nhận mặt tại văn phòng lúc 08:28.', status: 'Đã can thiệp' },
+  { empId: 'NV0104', name: 'Lê Thị Mai', dept: 'Tài chính Kế toán', date: '18/10/2023', checkInOrig: '08:25', checkOutOrig: '—:—', checkInAdj: '08:25', checkOutAdj: '17:35', adjBy: 'Trần Hoàng Yên', reason: 'Quên chấm công chiều do họp đột xuất tại phòng Giám đốc. Có biên bản họp xác nhận.', status: 'Đã can thiệp' },
+  { empId: 'NV0045', name: 'Đỗ Hữu Thắng', dept: 'Kinh doanh Khối B2B', date: '17/10/2023', checkInOrig: '—:—', checkOutOrig: '—:—', checkInAdj: '—:—', checkOutAdj: '—:—', adjBy: '—', reason: 'Chưa có điều chỉnh', status: 'Chờ xử lý' },
+  { empId: 'NV0188', name: 'Phạm Thu Trang', dept: 'Nhân sự & Tuyển dụng', date: '16/10/2023', checkInOrig: '08:15', checkOutOrig: '16:10', checkInAdj: '08:15', checkOutAdj: '17:30', adjBy: 'Nguyễn Văn An', reason: 'Được duyệt ra sớm 1h làm việc bù theo giấy điều chuyển công tác đã được phê duyệt trước đó.', status: 'Đã can thiệp' },
+  { empId: 'NV0055', name: 'Hoàng Văn Phúc', dept: 'Kỹ thuật', date: '16/10/2023', checkInOrig: '09:12', checkOutOrig: '17:00', checkInAdj: '08:00', checkOutAdj: '17:00', adjBy: 'Nguyễn Văn An', reason: 'Nhân viên có mặt đúng giờ nhưng thiết bị máy chấm công tầng 2 bị lỗi cảm biến từ 07:50 - 09:05.', status: 'Đã can thiệp' },
 ];
 
 export default function IUChNhCNg() {
@@ -63,7 +63,7 @@ export default function IUChNhCNg() {
           <h1 className="page-title">Điều chỉnh chấm công</h1>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <button type="button" onClick={()=>window.alert('Đã xuất nhật ký điều chỉnh')} className="btn-secondary">
+          <button type="button" onClick={() => window.alert('Đã xuất nhật ký điều chỉnh')} className="btn-secondary">
             <span className="material-symbols-outlined text-[18px]">download</span>
             Xuất nhật ký
           </button>
@@ -122,7 +122,7 @@ export default function IUChNhCNg() {
                   </td>
                 </tr>
               ) : visible.map(r => (
-                <tr key={r.empId + r.date} onClick={()=>{setSelected(r);setActiveModal(r.status==='Chờ xử lý'?'adjust':'detail')}} className="cursor-pointer text-sm hover:bg-slate-50 transition">
+                <tr key={r.empId + r.date} onClick={() => { setSelected(r); setActiveModal(r.status === 'Chờ xử lý' ? 'adjust' : 'detail') }} className="cursor-pointer text-sm hover:bg-slate-50 transition">
                   <td className="px-4 py-3 font-semibold text-blue-600">{r.empId}</td>
                   <td className="px-4 py-3">
                     <div className="font-semibold text-slate-900">{r.name}</div>
@@ -225,12 +225,12 @@ export default function IUChNhCNg() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="form-label">Giờ vào sau chỉnh</label>
-                  <input name="checkIn" type="time" defaultValue={selected.checkInAdj !== '—:—' ? selected.checkInAdj.replace(':','') : '08:30'}
+                  <input name="checkIn" type="time" defaultValue={selected.checkInAdj !== '—:—' ? selected.checkInAdj.replace(':', '') : '08:30'}
                     className="form-input" />
                 </div>
                 <div>
                   <label className="form-label">Giờ ra sau chỉnh</label>
-                  <input name="checkOut" type="time" defaultValue={selected.checkOutAdj !== '—:—' ? selected.checkOutAdj.replace(':','') : '17:30'}
+                  <input name="checkOut" type="time" defaultValue={selected.checkOutAdj !== '—:—' ? selected.checkOutAdj.replace(':', '') : '17:30'}
                     className="form-input" />
                 </div>
               </div>

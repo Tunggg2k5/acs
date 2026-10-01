@@ -5,24 +5,24 @@ import { type Role, useRole } from '../context/RoleContext';
 type LoginRole = Exclude<Role, 'GUEST'>;
 
 const accounts: Record<LoginRole, { label: string; username: string; password: string; name: string; dept: string }> = {
-  ADMIN:    { label: 'Admin',       username: 'admin@acs.vn',    password: 'Admin@123',    name: 'Nguyễn Tuấn Kiên', dept: 'Super Admin' },
-  HR:       { label: 'Nhân sự',     username: 'hr@acs.vn',       password: 'HR@123456',    name: 'Trần Thị Mai',   dept: 'Phòng Nhân sự' },
-  MANAGER:  { label: 'Quản lý',    username: 'manager@acs.vn',  password: 'Manager@123',  name: 'Lê Hoàng Dũng', dept: 'Trưởng phòng IT' },
-  EMPLOYEE: { label: 'Nhân viên',  username: 'employee@acs.vn', password: 'Employee@123', name: 'Trần Thị Mai',   dept: 'Phòng Kế toán' },
+  ADMIN: { label: 'Admin', username: 'admin@acs.vn', password: 'Admin@123', name: 'Nguyễn Tuấn Kiên', dept: 'Super Admin' },
+  HR: { label: 'Nhân sự', username: 'hr@acs.vn', password: 'HR@123456', name: 'Trần Thị Mai', dept: 'Phòng Nhân sự' },
+  MANAGER: { label: 'Quản lý', username: 'manager@acs.vn', password: 'Manager@123', name: 'Lê Hoàng Dũng', dept: 'Trưởng phòng IT' },
+  EMPLOYEE: { label: 'Nhân viên', username: 'employee@acs.vn', password: 'Employee@123', name: 'Trần Thị Mai', dept: 'Phòng Kế toán' },
 };
 
 const ROLE_ICONS: Record<LoginRole, string> = {
-  ADMIN:    'admin_panel_settings',
-  HR:       'badge',
-  MANAGER:  'manage_accounts',
+  ADMIN: 'admin_panel_settings',
+  HR: 'badge',
+  MANAGER: 'manage_accounts',
   EMPLOYEE: 'person',
 };
 
 const ROLE_COLORS: Record<LoginRole, { bg: string; text: string; border: string; avatar: string }> = {
-  ADMIN:    { bg: 'bg-blue-50',   text: 'text-blue-700',   border: 'border-blue-300',   avatar: 'bg-blue-600' },
-  HR:       { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-300', avatar: 'bg-purple-600' },
-  MANAGER:  { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-300', avatar: 'bg-indigo-600' },
-  EMPLOYEE: { bg: 'bg-teal-50',   text: 'text-teal-700',   border: 'border-teal-300',   avatar: 'bg-teal-600' },
+  ADMIN: { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-300', avatar: 'bg-blue-600' },
+  HR: { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-300', avatar: 'bg-purple-600' },
+  MANAGER: { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-300', avatar: 'bg-indigo-600' },
+  EMPLOYEE: { bg: 'bg-teal-50', text: 'text-teal-700', border: 'border-teal-300', avatar: 'bg-teal-600' },
 };
 
 export default function Login() {
@@ -30,9 +30,9 @@ export default function Login() {
   const navigate = useNavigate();
   const [role, setRole] = useState<LoginRole>('EMPLOYEE');
   const [show, setShow] = useState(false);
-  const [forgotOpen,setForgotOpen]=useState(false);
-  const [forgotStep,setForgotStep]=useState(1);
-  const [forgotVisible,setForgotVisible]=useState({next:false,confirm:false});
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotStep, setForgotStep] = useState(1);
+  const [forgotVisible, setForgotVisible] = useState({ next: false, confirm: false });
   const account = accounts[role];
   const colors = ROLE_COLORS[role];
 
@@ -143,9 +143,8 @@ export default function Login() {
                       key={r}
                       type="button"
                       onClick={() => setRole(r)}
-                      className={`flex flex-col items-center gap-2 rounded-xl border-2 p-3 text-center transition ${
-                        selected ? `${c.border} ${c.bg} ${c.text}` : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
-                      }`}
+                      className={`flex flex-col items-center gap-2 rounded-xl border-2 p-3 text-center transition ${selected ? `${c.border} ${c.bg} ${c.text}` : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                        }`}
                     >
                       <span className={`material-symbols-outlined text-2xl ${selected ? c.text : 'text-slate-400'}`}>
                         {ROLE_ICONS[r]}
@@ -182,7 +181,7 @@ export default function Login() {
 
               {/* Password */}
               <div>
-                <div className="flex items-center justify-between"><label className="form-label">Mật khẩu</label><button type="button" onClick={()=>{setForgotStep(1);setForgotOpen(true)}} className="text-xs font-semibold text-blue-600">Quên mật khẩu?</button></div>
+                <div className="flex items-center justify-between"><label className="form-label">Mật khẩu</label><button type="button" onClick={() => { setForgotStep(1); setForgotOpen(true) }} className="text-xs font-semibold text-blue-600">Quên mật khẩu?</button></div>
                 <div className="relative">
                   <input
                     key={`${role}-pass`}
@@ -217,10 +216,10 @@ export default function Login() {
           <p className="mt-5 text-center text-xs text-slate-400">
             Tài khoản và mật khẩu được tự động điền khi đổi vai trò.
           </p>
-          <p className="mt-3 text-center text-sm text-slate-500">Chưa có tài khoản? <button onClick={()=>navigate('/dang-ky')} className="font-semibold text-blue-600">Đăng ký ngay</button></p>
+          <p className="mt-3 text-center text-sm text-slate-500">Chưa có tài khoản? <button onClick={() => navigate('/dang-ky')} className="font-semibold text-blue-600">Đăng ký ngay</button></p>
         </div>
       </section>
-      {forgotOpen&&<div onMouseDown={e=>{if(e.target===e.currentTarget)setForgotOpen(false)}} className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/55 p-4"><form onSubmit={e=>{e.preventDefault();forgotStep<3?setForgotStep(forgotStep+1):setForgotOpen(false)}} className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl"><header className="flex items-center justify-between border-b px-6 py-4"><div><h2 className="font-bold">Đặt lại mật khẩu</h2><p className="mt-1 text-xs text-slate-500">{forgotStep===1?'Nhận OTP qua email công việc':forgotStep===2?'Xác thực mã OTP':'Tạo mật khẩu mới'}</p></div><button type="button" onClick={()=>setForgotOpen(false)} className="text-slate-400"><span className="material-symbols-outlined">close</span></button></header><div className="space-y-4 p-6">{forgotStep===1&&<label><span className="form-label">Email công việc</span><input required type="email" className="form-input" placeholder="name@acs.vn"/></label>}{forgotStep===2&&<label><span className="form-label">Mã OTP</span><input required inputMode="numeric" maxLength={6} className="form-input text-center tracking-[.5em]" placeholder="000000"/><small className="mt-2 block text-slate-400">OTP có thời hạn theo cấu hình hệ thống.</small></label>}{forgotStep===3&&<>{(['next','confirm'] as const).map((key,i)=><label key={key}><span className="form-label">{i===0?'Mật khẩu mới':'Nhập lại mật khẩu mới'}</span><span className="relative block"><input required minLength={8} type={forgotVisible[key]?'text':'password'} className="form-input pr-12"/><button type="button" aria-label={forgotVisible[key]?'Ẩn mật khẩu':'Xem mật khẩu'} onClick={()=>setForgotVisible(v=>({...v,[key]:!v[key]}))} className="absolute inset-y-1 right-1 flex w-9 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100"><span className="material-symbols-outlined text-lg">{forgotVisible[key]?'visibility_off':'visibility'}</span></button></span></label>)}</>}</div><footer className="flex justify-end gap-3 border-t bg-slate-50 px-6 py-4"><button type="button" onClick={()=>setForgotOpen(false)} className="btn-secondary">Hủy</button><button className="btn-primary">{forgotStep===1?'Gửi OTP':forgotStep===2?'Xác nhận':'Đổi mật khẩu'}</button></footer></form></div>}
+      {forgotOpen && <div onMouseDown={e => { if (e.target === e.currentTarget) setForgotOpen(false) }} className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/55 p-4"><form onSubmit={e => { e.preventDefault(); forgotStep < 3 ? setForgotStep(forgotStep + 1) : setForgotOpen(false) }} className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl"><header className="flex items-center justify-between border-b px-6 py-4"><div><h2 className="font-bold">Đặt lại mật khẩu</h2><p className="mt-1 text-xs text-slate-500">{forgotStep === 1 ? 'Nhận OTP qua email công việc' : forgotStep === 2 ? 'Xác thực mã OTP' : 'Tạo mật khẩu mới'}</p></div><button type="button" onClick={() => setForgotOpen(false)} className="text-slate-400"><span className="material-symbols-outlined">close</span></button></header><div className="space-y-4 p-6">{forgotStep === 1 && <label><span className="form-label">Email công việc</span><input required type="email" className="form-input" placeholder="name@acs.vn" /></label>}{forgotStep === 2 && <label><span className="form-label">Mã OTP</span><input required inputMode="numeric" maxLength={6} className="form-input text-center tracking-[.5em]" placeholder="000000" /><small className="mt-2 block text-slate-400">OTP có thời hạn theo cấu hình hệ thống.</small></label>}{forgotStep === 3 && <>{(['next', 'confirm'] as const).map((key, i) => <label key={key}><span className="form-label">{i === 0 ? 'Mật khẩu mới' : 'Nhập lại mật khẩu mới'}</span><span className="relative block"><input required minLength={8} type={forgotVisible[key] ? 'text' : 'password'} className="form-input pr-12" /><button type="button" aria-label={forgotVisible[key] ? 'Ẩn mật khẩu' : 'Xem mật khẩu'} onClick={() => setForgotVisible(v => ({ ...v, [key]: !v[key] }))} className="absolute inset-y-1 right-1 flex w-9 items-center justify-center rounded-md text-slate-400 hover:bg-slate-100"><span className="material-symbols-outlined text-lg">{forgotVisible[key] ? 'visibility_off' : 'visibility'}</span></button></span></label>)}</>}</div><footer className="flex justify-end gap-3 border-t bg-slate-50 px-6 py-4"><button type="button" onClick={() => setForgotOpen(false)} className="btn-secondary">Hủy</button><button className="btn-primary">{forgotStep === 1 ? 'Gửi OTP' : forgotStep === 2 ? 'Xác nhận' : 'Đổi mật khẩu'}</button></footer></form></div>}
     </main>
   );
 }

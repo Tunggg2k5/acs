@@ -8,13 +8,13 @@ type AuditLog = {
 };
 
 const LOGS: AuditLog[] = [
-  { id:'AUDIT-893240', time:'14:25', date:'18/10/2023', user:'nguyenvanan',   userRole:'Admin',   module:'Chấm công', action:'Điều chỉnh giờ vào', target:'NV0092',  ip:'192.168.1.45',  status:'Thành công', reason:'Nhân viên quên quẹt thẻ vào ca sáng do hệ thống cửa vận tay bảo trì lúc 08:30.', oldValue:{ checkin_time:'NULL (Chưa quẹt)', status_code:'ABSENT', work_credit:'0.0', modified_by_admin:'false', approval_ticket_id:'NULL' }, newValue:{ checkin_time:'08:28:14', status_code:'ON_TIME', work_credit:'1.0 công', modified_by_admin:'true', approval_ticket_id:'ADJ-2023-1082' } },
-  { id:'AUDIT-893201', time:'09:12', date:'18/10/2023', user:'tranthimai',    userRole:'Manager', module:'Phê duyệt',  action:'Duyệt phiếu nghỉ phép', target:'NP2023-881', ip:'10.0.0.32',     status:'Thành công', reason:'Phê duyệt đơn nghỉ phép theo đúng quy trình.', oldValue:{ status:'PENDING' }, newValue:{ status:'APPROVED' } },
-  { id:'AUDIT-893155', time:'08:45', date:'18/10/2023', user:'nguyenvanan',   userRole:'Admin',   module:'Hệ thống',  action:'Cập nhật tham số đi muộn', target:'sys_config', ip:'192.168.1.45', status:'Thành công', reason:'Điều chỉnh ngưỡng đi muộn từ 5 phút lên 10 phút theo chính sách mới.', oldValue:{ late_threshold:'5 phút' }, newValue:{ late_threshold:'10 phút' } },
-  { id:'AUDIT-893100', time:'07:55', date:'18/10/2023', user:'SYSTEM_DAEMON', userRole:'Service', module:'Chấm công',  action:'Đồng bộ máy chấm công', target:'TERMINAL-04', ip:'10.10.0.4',    status:'Thành công', reason:'Tác vụ tự động đồng bộ dữ liệu.', oldValue:{}, newValue:{ synced_records:'142', last_sync:'07:55:00' } },
-  { id:'AUDIT-892998', time:'17:40', date:'17/10/2023', user:'hoangminh',     userRole:'—',       module:'Bảo mật',   action:'Sai mật khẩu quá 5 lần', target:'USR_hoangminh', ip:'203.113.44.2', status:'Thất bại', reason:'Tài khoản bị khóa tạm thời 30 phút.', oldValue:{ login_attempts:'4' }, newValue:{ login_attempts:'5', account_locked:'true' } },
-  { id:'AUDIT-892940', time:'16:30', date:'17/10/2023', user:'lethanhhung',   userRole:'Manager', module:'Phê duyệt',  action:'Từ chối phiếu công tác', target:'CT-1088', ip:'10.0.0.21',     status:'Thành công', reason:'Đề xuất không đầy đủ thông tin tài chính.', oldValue:{ status:'PENDING' }, newValue:{ status:'REJECTED' } },
-  { id:'AUDIT-892890', time:'14:10', date:'17/10/2023', user:'nguyenvanan',   userRole:'Admin',   module:'Tổ chức',   action:'Thêm phòng ban mới', target:'Phòng R&D', ip:'192.168.1.45',   status:'Thành công', reason:'Mở rộng cơ cấu tổ chức theo kế hoạch Q4.', oldValue:{}, newValue:{ dept_code:'DEPT-RD', dept_name:'Phòng R&D', manager:'Trần Văn Nam' } },
+  { id: 'AUDIT-893240', time: '14:25', date: '18/10/2023', user: 'nguyenvanan', userRole: 'Admin', module: 'Chấm công', action: 'Điều chỉnh giờ vào', target: 'NV0092', ip: '192.168.1.45', status: 'Thành công', reason: 'Nhân viên quên quẹt thẻ vào ca sáng do hệ thống cửa vận tay bảo trì lúc 08:30.', oldValue: { checkin_time: 'NULL (Chưa quẹt)', status_code: 'ABSENT', work_credit: '0.0', modified_by_admin: 'false', approval_ticket_id: 'NULL' }, newValue: { checkin_time: '08:28:14', status_code: 'ON_TIME', work_credit: '1.0 công', modified_by_admin: 'true', approval_ticket_id: 'ADJ-2023-1082' } },
+  { id: 'AUDIT-893201', time: '09:12', date: '18/10/2023', user: 'tranthimai', userRole: 'Manager', module: 'Phê duyệt', action: 'Duyệt phiếu nghỉ phép', target: 'NP2023-881', ip: '10.0.0.32', status: 'Thành công', reason: 'Phê duyệt đơn nghỉ phép theo đúng quy trình.', oldValue: { status: 'PENDING' }, newValue: { status: 'APPROVED' } },
+  { id: 'AUDIT-893155', time: '08:45', date: '18/10/2023', user: 'nguyenvanan', userRole: 'Admin', module: 'Hệ thống', action: 'Cập nhật tham số đi muộn', target: 'sys_config', ip: '192.168.1.45', status: 'Thành công', reason: 'Điều chỉnh ngưỡng đi muộn từ 5 phút lên 10 phút theo chính sách mới.', oldValue: { late_threshold: '5 phút' }, newValue: { late_threshold: '10 phút' } },
+  { id: 'AUDIT-893100', time: '07:55', date: '18/10/2023', user: 'SYSTEM_DAEMON', userRole: 'Service', module: 'Chấm công', action: 'Đồng bộ máy chấm công', target: 'TERMINAL-04', ip: '10.10.0.4', status: 'Thành công', reason: 'Tác vụ tự động đồng bộ dữ liệu.', oldValue: {}, newValue: { synced_records: '142', last_sync: '07:55:00' } },
+  { id: 'AUDIT-892998', time: '17:40', date: '17/10/2023', user: 'hoangminh', userRole: '—', module: 'Bảo mật', action: 'Sai mật khẩu quá 5 lần', target: 'USR_hoangminh', ip: '203.113.44.2', status: 'Thất bại', reason: 'Tài khoản bị khóa tạm thời 30 phút.', oldValue: { login_attempts: '4' }, newValue: { login_attempts: '5', account_locked: 'true' } },
+  { id: 'AUDIT-892940', time: '16:30', date: '17/10/2023', user: 'lethanhhung', userRole: 'Manager', module: 'Phê duyệt', action: 'Từ chối phiếu công tác', target: 'CT-1088', ip: '10.0.0.21', status: 'Thành công', reason: 'Đề xuất không đầy đủ thông tin tài chính.', oldValue: { status: 'PENDING' }, newValue: { status: 'REJECTED' } },
+  { id: 'AUDIT-892890', time: '14:10', date: '17/10/2023', user: 'nguyenvanan', userRole: 'Admin', module: 'Tổ chức', action: 'Thêm phòng ban mới', target: 'Phòng R&D', ip: '192.168.1.45', status: 'Thành công', reason: 'Mở rộng cơ cấu tổ chức theo kế hoạch Q4.', oldValue: {}, newValue: { dept_code: 'DEPT-RD', dept_name: 'Phòng R&D', manager: 'Trần Văn Nam' } },
 ];
 
 const MODULES = ['Tất cả phân hệ', 'Chấm công', 'Phê duyệt', 'Hệ thống', 'Bảo mật', 'Tổ chức'];
@@ -35,9 +35,9 @@ const moduleIcon: Record<string, string> = {
 };
 
 export default function CUHNhAuditLog() {
-  const [params,setParams]=useSearchParams();
+  const [params, setParams] = useSearchParams();
   const isAudit = params.get('tab') === 'audit';
-  const [activeTab, setActiveTab] = useState<1 | 2 | 3>(isAudit?3:1);
+  const [activeTab, setActiveTab] = useState<1 | 2 | 3>(isAudit ? 3 : 1);
   const [filterUser, setFilterUser] = useState('');
   const [filterModule, setFilterModule] = useState('Tất cả phân hệ');
   const [filterStatus, setFilterStatus] = useState('ALL');
@@ -75,7 +75,7 @@ export default function CUHNhAuditLog() {
             <button
               key={t.id}
               type="button"
-              onClick={() => {setActiveTab(t.id);setParams(t.id===3?{tab:'audit'}:{})}}
+              onClick={() => { setActiveTab(t.id); setParams(t.id === 3 ? { tab: 'audit' } : {}) }}
               className={`h-12 px-5 flex items-center gap-2 text-sm font-medium border-b-2 transition-colors ${activeTab === t.id ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
             >
               <span className="material-symbols-outlined text-[18px]">{t.icon}</span>
@@ -109,7 +109,7 @@ export default function CUHNhAuditLog() {
               ))}
             </div>
             <div className="flex mt-8 pt-5 border-t border-slate-100">
-              <button type="button" onClick={()=>window.alert('Đã lưu cấu hình hệ thống')} className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700">
+              <button type="button" onClick={() => window.alert('Đã lưu cấu hình hệ thống')} className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700">
                 <span className="material-symbols-outlined text-[18px]">save</span>Lưu cấu hình
               </button>
             </div>

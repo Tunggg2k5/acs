@@ -78,7 +78,7 @@ export default function QuNLNgIDNg() {
   const [dept, setDept] = useState("Tất cả phòng ban");
   const [status, setStatus] = useState("Chờ duyệt (4)");
   const [selected, setSelected] = useState<Account | null>(null);
-  const [modalMode,setModalMode]=useState<'approve'|'edit'>('approve');
+  const [modalMode, setModalMode] = useState<'approve' | 'edit'>('approve');
   const visible = useMemo(
     () =>
       rows.filter(
@@ -163,7 +163,7 @@ export default function QuNLNgIDNg() {
             </thead>
             <tbody className="divide-y">
               {visible.map((x) => (
-                <tr key={x.id} tabIndex={x.status==='Chờ duyệt'?0:undefined} role={x.status==='Chờ duyệt'?'button':undefined} onClick={()=>{if(x.status==='Chờ duyệt'){setSelected(x);setModalMode('approve')}}} onKeyDown={e=>{if(x.status==='Chờ duyệt'&&(e.key==='Enter'||e.key===' ')){e.preventDefault();setSelected(x);setModalMode('approve')}}} className={`text-sm ${x.status==='Chờ duyệt'?'cursor-pointer hover:bg-blue-50/60 focus:bg-blue-50 focus:outline-none':''}`}>
+                <tr key={x.id} tabIndex={x.status === 'Chờ duyệt' ? 0 : undefined} role={x.status === 'Chờ duyệt' ? 'button' : undefined} onClick={() => { if (x.status === 'Chờ duyệt') { setSelected(x); setModalMode('approve') } }} onKeyDown={e => { if (x.status === 'Chờ duyệt' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); setSelected(x); setModalMode('approve') } }} className={`text-sm ${x.status === 'Chờ duyệt' ? 'cursor-pointer hover:bg-blue-50/60 focus:bg-blue-50 focus:outline-none' : ''}`}>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-3">
                       <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-600">
@@ -191,7 +191,7 @@ export default function QuNLNgIDNg() {
                     {x.status === "Chờ duyệt" ? (
                       <div className="flex gap-2">
                         <button
-                          onClick={(e) => {e.stopPropagation();setSelected(x);setModalMode('approve')}}
+                          onClick={(e) => { e.stopPropagation(); setSelected(x); setModalMode('approve') }}
                           className="h-9 w-9 rounded-lg bg-blue-600 font-bold text-white"
                         >
                           ✓
@@ -212,7 +212,7 @@ export default function QuNLNgIDNg() {
                       </div>
                     ) : (
                       <button
-                        onClick={(e) => {e.stopPropagation();setSelected(x);setModalMode('edit')}}
+                        onClick={(e) => { e.stopPropagation(); setSelected(x); setModalMode('edit') }}
                         className="btn-secondary"
                       >
                         ✎ Chỉnh sửa
@@ -228,7 +228,7 @@ export default function QuNLNgIDNg() {
           <span>Đang xem 1 - {visible.length} trong tổng số 47 bản ghi</span>
           <span>
             Trước　<b className="rounded bg-blue-600 px-3 py-2 text-white">1</b>
-            　2　3　Sau
+            2　3　Sau
           </span>
         </footer>
       </section>
@@ -249,9 +249,9 @@ export default function QuNLNgIDNg() {
               </div>
               <button onClick={() => setSelected(null)}>✕</button>
             </header>
-            <form id="account-settings" onSubmit={e=>{e.preventDefault();modalMode==='approve'?update('Đã duyệt'):setSelected(null)}} className="space-y-6 p-7">
+            <form id="account-settings" onSubmit={e => { e.preventDefault(); modalMode === 'approve' ? update('Đã duyệt') : setSelected(null) }} className="space-y-6 p-7">
               <div className="grid grid-cols-2 gap-6 rounded-2xl border bg-slate-50 p-5">
-                <div><span className="form-label">Ảnh đại diện</span><div className="mt-2 flex h-20 w-20 items-center justify-center rounded-xl bg-blue-100 text-xl font-bold text-blue-700">{selected.name.split(' ').slice(-2).map(x=>x[0]).join('')}</div></div>
+                <div><span className="form-label">Ảnh đại diện</span><div className="mt-2 flex h-20 w-20 items-center justify-center rounded-xl bg-blue-100 text-xl font-bold text-blue-700">{selected.name.split(' ').slice(-2).map(x => x[0]).join('')}</div></div>
                 <div><span className="form-label">Ảnh CMND/CCCD</span><div className="mt-2 flex h-20 w-28 flex-col items-center justify-center rounded-xl border bg-white text-xs text-slate-500"><span className="material-symbols-outlined">badge</span>001186040007</div></div>
               </div>
               <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -263,17 +263,17 @@ export default function QuNLNgIDNg() {
                   <span className="form-label">Email</span>
                   <input defaultValue={selected.email} className="form-input" />
                 </label>
-                <label><span className="form-label">Số điện thoại</span><input disabled defaultValue="0772350268" className="form-input bg-slate-100 text-slate-500"/></label>
-                <label><span className="form-label">Số CCCD</span><input disabled defaultValue="001186040007" className="form-input bg-slate-100 text-slate-500"/></label>
-                <label><span className="form-label">Tên tài khoản valley</span><input disabled defaultValue={`BOS_${selected.email.split('@')[0].replace('.','')}`} className="form-input bg-slate-100 text-slate-500"/></label>
-                <label><span className="form-label">Ngày sinh</span><input disabled type="date" defaultValue="1986-08-17" className="form-input bg-slate-100 text-slate-500"/></label>
-                <label><span className="form-label">Ngày cấp CCCD</span><input disabled type="date" defaultValue="2026-05-26" className="form-input bg-slate-100 text-slate-500"/></label>
-                <label><span className="form-label">Giới tính</span><div className="form-input flex items-center gap-4 bg-slate-100 text-slate-500"><label><input disabled type="radio" name="gender" defaultChecked/> Nam</label><label><input disabled type="radio" name="gender"/> Nữ</label></div></label>
-                <label className="lg:col-span-4"><span className="form-label">Địa chỉ</span><input disabled defaultValue="SN78A ngõ 3 Xuân Phương, Nam Từ Liêm, HN" className="form-input bg-slate-100 text-slate-500"/></label>
-                <label><span className="form-label">Trạng thái</span><select className="form-input" defaultValue={selected.status==='Chờ duyệt'?'Đang hoạt động':selected.status}><option>Đang hoạt động</option><option>Đã khóa</option></select></label>
+                <label><span className="form-label">Số điện thoại</span><input disabled defaultValue="0772350268" className="form-input bg-slate-100 text-slate-500" /></label>
+                <label><span className="form-label">Số CCCD</span><input disabled defaultValue="001186040007" className="form-input bg-slate-100 text-slate-500" /></label>
+                <label><span className="form-label">Tên tài khoản valley</span><input disabled defaultValue={`BOS_${selected.email.split('@')[0].replace('.', '')}`} className="form-input bg-slate-100 text-slate-500" /></label>
+                <label><span className="form-label">Ngày sinh</span><input disabled type="date" defaultValue="1986-08-17" className="form-input bg-slate-100 text-slate-500" /></label>
+                <label><span className="form-label">Ngày cấp CCCD</span><input disabled type="date" defaultValue="2026-05-26" className="form-input bg-slate-100 text-slate-500" /></label>
+                <label><span className="form-label">Giới tính</span><div className="form-input flex items-center gap-4 bg-slate-100 text-slate-500"><label><input disabled type="radio" name="gender" defaultChecked /> Nam</label><label><input disabled type="radio" name="gender" /> Nữ</label></div></label>
+                <label className="lg:col-span-4"><span className="form-label">Địa chỉ</span><input disabled defaultValue="SN78A ngõ 3 Xuân Phương, Nam Từ Liêm, HN" className="form-input bg-slate-100 text-slate-500" /></label>
+                <label><span className="form-label">Trạng thái</span><select className="form-input" defaultValue={selected.status === 'Chờ duyệt' ? 'Đang hoạt động' : selected.status}><option>Đang hoạt động</option><option>Đã khóa</option></select></label>
                 <label><span className="form-label">Cấp phép ra vào</span><select className="form-input"><option>Cho phép ra vào</option><option>Từ chối ra vào</option></select></label>
                 <label><span className="form-label">Nhóm quyền</span><select className="form-input"><option>chưa chọn</option><option>Nhân viên</option><option>Quản lý</option></select></label>
-                <button type="button" onClick={()=>window.alert('Mở cấu hình phân quyền cửa')} className="form-input mt-5 flex items-center justify-between bg-white font-semibold">▥ Phân quyền cửa (0)<span>›</span></button>
+                <button type="button" onClick={() => window.alert('Mở cấu hình phân quyền cửa')} className="form-input mt-5 flex items-center justify-between bg-white font-semibold">▥ Phân quyền cửa (0)<span>›</span></button>
                 <label>
                   <span className="form-label">Phòng ban</span>
                   <select className="form-input" defaultValue={selected.dept}>
@@ -287,10 +287,10 @@ export default function QuNLNgIDNg() {
                   <select className="form-input" defaultValue={selected.title}><option>{selected.title}</option><option>Chuyên viên</option><option>Trưởng phòng</option></select>
                 </label>
                 <label><span className="form-label">Vị trí làm việc</span><select className="form-input"><option>chưa chọn</option><option>Văn phòng Hà Nội</option><option>Chi nhánh TP.HCM</option></select></label>
-                <button type="button" onClick={()=>window.alert('Đã thêm cấu hình phụ')} className="mt-5 h-11 rounded-lg border bg-slate-50 text-2xl text-slate-600">＋</button>
+                <button type="button" onClick={() => window.alert('Đã thêm cấu hình phụ')} className="mt-5 h-11 rounded-lg border bg-slate-50 text-2xl text-slate-600">＋</button>
               </div>
             </form>
-            <footer className="flex gap-3 border-t bg-slate-50 p-5">{modalMode==='approve'?<><button onClick={()=>update('Từ chối')} className="btn-secondary">Từ chối</button><button type="submit" form="account-settings" className="btn-primary">Duyệt</button></>:<><button onClick={()=>setSelected(null)} className="btn-secondary">Đóng</button><button type="submit" form="account-settings" className="btn-primary">Lưu thay đổi</button></>}</footer>
+            <footer className="flex gap-3 border-t bg-slate-50 p-5">{modalMode === 'approve' ? <><button onClick={() => update('Từ chối')} className="btn-secondary">Từ chối</button><button type="submit" form="account-settings" className="btn-primary">Duyệt</button></> : <><button onClick={() => setSelected(null)} className="btn-secondary">Đóng</button><button type="submit" form="account-settings" className="btn-primary">Lưu thay đổi</button></>}</footer>
           </section>
         </div>
       )}

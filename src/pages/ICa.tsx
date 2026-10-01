@@ -10,13 +10,13 @@ type Shift = {
 
 export default function ICa() {
   const { role } = useRole();
-  const [activeModal, setActiveModal] = useState<string|null>(null);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
   const [shifts, setShifts] = useState<Shift[]>([
     { id: 'DC-1026-001', empId: 'NV015', name: 'Trần Thị Mai', currentShift: 'Ca Sáng (08:00-17:00)', requestedShift: 'Ca Chiều (13:00-22:00)', swapWith: 'Lê Văn Bình', date: '26/10/2023', status: 'Chờ duyệt' },
     { id: 'DC-1025-002', empId: 'NV012', name: 'Nguyễn Đức Thành', currentShift: 'Ca Chiều (13:00-22:00)', requestedShift: 'Ca Sáng (08:00-17:00)', swapWith: 'Trần Hà Linh', date: '25/10/2023', status: 'Đã duyệt' },
     { id: 'DC-1024-003', empId: 'NV008', name: 'Lê Thị Hương', currentShift: 'Ca Tối (22:00-06:00)', requestedShift: 'Ca Sáng (08:00-17:00)', swapWith: 'Phạm Văn Dũng', date: '24/10/2023', status: 'Từ chối' },
   ]);
-  const [selectedShift, setSelectedShift] = useState<Shift|null>(null);
+  const [selectedShift, setSelectedShift] = useState<Shift | null>(null);
   const [filterStatus, setFilterStatus] = useState('ALL');
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   if (role === 'ADMIN') return <AdminSwapView />;
@@ -102,7 +102,7 @@ export default function ICa() {
               className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${filterStatus === f
                 ? 'bg-blue-600 text-white shadow-sm'
                 : 'text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200'
-              }`}
+                }`}
               type="button"
             >
               {f === 'ALL' ? 'Tất cả' : f}

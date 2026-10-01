@@ -143,11 +143,10 @@ export default function LChTrCPhNCNgTrC() {
                 </td>
                 <td className="px-4 py-3 text-right font-bold text-slate-800">{a.allowance}</td>
                 <td className="px-4 py-3">
-                  <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold border ${
-                    a.status === 'Đã duyệt'
+                  <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold border ${a.status === 'Đã duyệt'
                       ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
                       : 'bg-amber-50 text-amber-700 border-amber-200'
-                  }`}>
+                    }`}>
                     {a.status}
                   </span>
                 </td>

@@ -33,39 +33,43 @@ function EmployeeDashboard() {
   const d = EMPLOYEE_DATA;
   const [weekOffset, setWeekOffset] = useState(0);
   const scheduleRows = [
-    { shift: 'Ca Sáng', time: '08:30 - 12:00', days: [
-      { state: 'Đúng giờ', tone: 'emerald', timeLog:'08:25 - 12:02', task:'Rà soát tài liệu', deadline:'Hạn: 11:30' },
-      { state: 'Đi muộn', tone: 'amber', timeLog:'08:42 - 12:05', event: '09:00', note: 'Phòng họp 201', task:'Cập nhật', deadline:'Hạn: 12:00' },
-      { state: 'Có phép', tone: 'emerald', timeLog:'-- : --', task:'Chuẩn bị báo...', deadline:'Hạn: 10:30' },
-      { state: 'Không phép', tone: 'rose', timeLog:'-- : --' },
-      { state: 'Chưa xảy ra', tone: 'slate', timeLog:'-- : --', task:'Tổng hợp chấm', deadline:'Hạn: 11:45' },
-      { state: 'Chưa diễn ra', tone: 'slate', timeLog:'-- : --' },
-      { state: 'Ngày nghỉ', tone: 'muted' },
-    ]},
-    { shift: 'Ca Chiều', time: '13:00 - 17:30', days: [
-      { state: 'Đúng giờ', tone: 'emerald', timeLog:'12:55 - 17:35' },
-      { state: 'Đúng giờ', tone: 'emerald', timeLog:'12:58 - 17:32', task:'Kiểm tra log ra...', deadline:'Hạn: 16:30' },
-      { state: 'Có phép', tone: 'emerald', timeLog:'-- : --', event: '14:00', note: 'Phòng họp Polaris' },
-      { state: 'Không phép', tone: 'rose', timeLog:'-- : --', task:'Phối hợp...', deadline:'Hạn: 17:00' },
-      { state: 'Chưa xảy ra', tone: 'slate', timeLog:'-- : --' },
-      { state: 'Ngày nghỉ', tone: 'muted' },
-      { state: 'Ngày nghỉ', tone: 'muted' },
-    ]},
+    {
+      shift: 'Ca Sáng', time: '08:30 - 12:00', days: [
+        { state: 'Đúng giờ', tone: 'emerald', timeLog: '08:25 - 12:02', task: 'Rà soát tài liệu', deadline: 'Hạn: 11:30' },
+        { state: 'Đi muộn', tone: 'amber', timeLog: '08:42 - 12:05', event: '09:00', note: 'Phòng họp 201', task: 'Cập nhật', deadline: 'Hạn: 12:00' },
+        { state: 'Có phép', tone: 'emerald', timeLog: '-- : --', task: 'Chuẩn bị báo...', deadline: 'Hạn: 10:30' },
+        { state: 'Không phép', tone: 'rose', timeLog: '-- : --' },
+        { state: 'Chưa xảy ra', tone: 'slate', timeLog: '-- : --', task: 'Tổng hợp chấm', deadline: 'Hạn: 11:45' },
+        { state: 'Chưa diễn ra', tone: 'slate', timeLog: '-- : --' },
+        { state: 'Ngày nghỉ', tone: 'muted' },
+      ]
+    },
+    {
+      shift: 'Ca Chiều', time: '13:00 - 17:30', days: [
+        { state: 'Đúng giờ', tone: 'emerald', timeLog: '12:55 - 17:35' },
+        { state: 'Đúng giờ', tone: 'emerald', timeLog: '12:58 - 17:32', task: 'Kiểm tra log ra...', deadline: 'Hạn: 16:30' },
+        { state: 'Có phép', tone: 'emerald', timeLog: '-- : --', event: '14:00', note: 'Phòng họp Polaris' },
+        { state: 'Không phép', tone: 'rose', timeLog: '-- : --', task: 'Phối hợp...', deadline: 'Hạn: 17:00' },
+        { state: 'Chưa xảy ra', tone: 'slate', timeLog: '-- : --' },
+        { state: 'Ngày nghỉ', tone: 'muted' },
+        { state: 'Ngày nghỉ', tone: 'muted' },
+      ]
+    },
   ];
 
   const toneClass: Record<string, string> = {
     emerald: 'text-emerald-600',
-    amber:   'text-amber-500',
-    rose:    'text-rose-600',
-    slate:   'text-slate-400',
-    muted:   'text-slate-300',
+    amber: 'text-amber-500',
+    rose: 'text-rose-600',
+    slate: 'text-slate-400',
+    muted: 'text-slate-300',
   };
   const toneBg: Record<string, string> = {
     emerald: 'bg-emerald-50 border-emerald-100',
-    amber:   'bg-amber-50 border-amber-100',
-    rose:    'bg-rose-50 border-rose-100',
-    slate:   'bg-slate-50 border-slate-100',
-    muted:   'bg-slate-50/50 border-transparent',
+    amber: 'bg-amber-50 border-amber-100',
+    rose: 'bg-rose-50 border-rose-100',
+    slate: 'bg-slate-50 border-slate-100',
+    muted: 'bg-slate-50/50 border-transparent',
   };
 
   const displayedScheduleRows = weekOffset === 0 ? scheduleRows : weekOffset < 0
@@ -197,29 +201,29 @@ function EmployeeDashboard() {
 
 function ManagerDashboard() {
   const requests = [
-    { id:'PH-2024-015', name:'Lê Thanh Bình',     initials:'LB', type:'Nghỉ phép năm',          shortType:'Nghỉ phép',      date:'25/10 - 26/10',  sub:'2 ngày ca ngày',      period:'25/10 - 26/10/2024 (2 ngày)',                     created:'18/10/2024 14:30', reason:'Giải quyết việc gia đình cá nhân tại quê',                        handover:'Vũ Khánh Linh (Hỗ trợ bàn giao)',              attachment:'Don_xin_phep_Lê_Thanh_Binh.pdf (142 KB)' },
-    { id:'PH-2024-018', name:'Nguyễn Văn Hùng',   initials:'NH', type:'Đổi ca trực',             shortType:'Đổi ca',         date:'22/10/2024',      sub:'Sáng ➔ Chiều',        period:'22/10/2024 (Ca Sáng ➔ Ca Chiều)',                  created:'19/10/2024 09:15', reason:'Trùng lịch khám sức khỏe định kỳ buổi sáng',                      handover:'Phạm Minh Tuấn (Nhận ca sáng thay thế)',       attachment:'Biên_ban_thoa_thuan_doi_ca.pdf (88 KB)' },
-    { id:'PH-2024-025', name:'Vũ Khánh Linh',     initials:'KL', type:'Nghỉ nửa ngày (chiều)',  shortType:'Nghỉ nửa ngày',  date:'23/10/2024',      sub:'13:30 - 17:30',       period:'23/10/2024 (13:30 - 17:30)',                      created:'21/10/2024 08:30', reason:'Khám bệnh theo lịch hẹn bác sĩ',                                  handover:'Lê Thanh Bình (Bàn giao trực dự án)',          attachment:'Lich_kham_benh_vien.pdf (115 KB)' },
-    { id:'PH-2024-027', name:'Đỗ Quốc Bảo',       initials:'QB', type:'Giải trình quên chấm công', shortType:'Quên chấm công', date:'21/10/2024',   sub:'Check-in sáng',       period:'21/10/2024 (Check-in sáng)',                      created:'21/10/2024 09:05', reason:'Cửa quét vân tay sảnh 1 bảo trì đột xuất',                        handover:'Bùi Thanh Tùng (Xác nhận đi cùng thang máy)',  attachment:'Hinh_anh_loi_may_cham_cong.jpg (320 KB)' },
-    { id:'PH-2024-031', name:'Nguyễn Thị Ngọc',   initials:'NN', type:'Nghỉ phép năm', shortType:'Nghỉ phép', date:'27/10/2024', sub:'1 ngày', period:'27/10/2024 (1 ngày)', created:'22/10/2024 08:40', reason:'Giải quyết việc gia đình', handover:'Trần Đức Thắng', attachment:'—' },
-    { id:'PH-2024-032', name:'Trần Đức Thắng',    initials:'TT', type:'Nghỉ phép năm', shortType:'Nghỉ phép', date:'28/10/2024', sub:'1 ngày', period:'28/10/2024 (1 ngày)', created:'22/10/2024 09:20', reason:'Việc cá nhân', handover:'Hoàng Mai Anh', attachment:'—' },
-    { id:'PH-2024-033', name:'Hoàng Mai Anh',     initials:'HA', type:'Giải trình quên chấm công', shortType:'Quên chấm công', date:'22/10/2024', sub:'Check-out chiều', period:'22/10/2024', created:'22/10/2024 17:40', reason:'Thiết bị chấm công mất kết nối', handover:'—', attachment:'—' },
-    { id:'PH-2024-034', name:'Nguyễn Văn Hùng',   initials:'NH', type:'Nghỉ phép năm', shortType:'Nghỉ phép', date:'24/10/2024', sub:'1 ngày', period:'24/10/2024', created:'23/10/2024 08:10', reason:'Khám sức khỏe', handover:'Bùi Thanh Tùng', attachment:'—' },
+    { id: 'PH-2024-015', name: 'Lê Thanh Bình', initials: 'LB', type: 'Nghỉ phép năm', shortType: 'Nghỉ phép', date: '25/10 - 26/10', sub: '2 ngày ca ngày', period: '25/10 - 26/10/2024 (2 ngày)', created: '18/10/2024 14:30', reason: 'Giải quyết việc gia đình cá nhân tại quê', handover: 'Vũ Khánh Linh (Hỗ trợ bàn giao)', attachment: 'Don_xin_phep_Lê_Thanh_Binh.pdf (142 KB)' },
+    { id: 'PH-2024-018', name: 'Nguyễn Văn Hùng', initials: 'NH', type: 'Đổi ca trực', shortType: 'Đổi ca', date: '22/10/2024', sub: 'Sáng ➔ Chiều', period: '22/10/2024 (Ca Sáng ➔ Ca Chiều)', created: '19/10/2024 09:15', reason: 'Trùng lịch khám sức khỏe định kỳ buổi sáng', handover: 'Phạm Minh Tuấn (Nhận ca sáng thay thế)', attachment: 'Biên_ban_thoa_thuan_doi_ca.pdf (88 KB)' },
+    { id: 'PH-2024-025', name: 'Vũ Khánh Linh', initials: 'KL', type: 'Nghỉ nửa ngày (chiều)', shortType: 'Nghỉ nửa ngày', date: '23/10/2024', sub: '13:30 - 17:30', period: '23/10/2024 (13:30 - 17:30)', created: '21/10/2024 08:30', reason: 'Khám bệnh theo lịch hẹn bác sĩ', handover: 'Lê Thanh Bình (Bàn giao trực dự án)', attachment: 'Lich_kham_benh_vien.pdf (115 KB)' },
+    { id: 'PH-2024-027', name: 'Đỗ Quốc Bảo', initials: 'QB', type: 'Giải trình quên chấm công', shortType: 'Quên chấm công', date: '21/10/2024', sub: 'Check-in sáng', period: '21/10/2024 (Check-in sáng)', created: '21/10/2024 09:05', reason: 'Cửa quét vân tay sảnh 1 bảo trì đột xuất', handover: 'Bùi Thanh Tùng (Xác nhận đi cùng thang máy)', attachment: 'Hinh_anh_loi_may_cham_cong.jpg (320 KB)' },
+    { id: 'PH-2024-031', name: 'Nguyễn Thị Ngọc', initials: 'NN', type: 'Nghỉ phép năm', shortType: 'Nghỉ phép', date: '27/10/2024', sub: '1 ngày', period: '27/10/2024 (1 ngày)', created: '22/10/2024 08:40', reason: 'Giải quyết việc gia đình', handover: 'Trần Đức Thắng', attachment: '—' },
+    { id: 'PH-2024-032', name: 'Trần Đức Thắng', initials: 'TT', type: 'Nghỉ phép năm', shortType: 'Nghỉ phép', date: '28/10/2024', sub: '1 ngày', period: '28/10/2024 (1 ngày)', created: '22/10/2024 09:20', reason: 'Việc cá nhân', handover: 'Hoàng Mai Anh', attachment: '—' },
+    { id: 'PH-2024-033', name: 'Hoàng Mai Anh', initials: 'HA', type: 'Giải trình quên chấm công', shortType: 'Quên chấm công', date: '22/10/2024', sub: 'Check-out chiều', period: '22/10/2024', created: '22/10/2024 17:40', reason: 'Thiết bị chấm công mất kết nối', handover: '—', attachment: '—' },
+    { id: 'PH-2024-034', name: 'Nguyễn Văn Hùng', initials: 'NH', type: 'Nghỉ phép năm', shortType: 'Nghỉ phép', date: '24/10/2024', sub: '1 ngày', period: '24/10/2024', created: '23/10/2024 08:10', reason: 'Khám sức khỏe', handover: 'Bùi Thanh Tùng', attachment: '—' },
   ];
   const violations = [
-    { name:'Nguyễn Văn Hùng',   position:'Kỹ sư phần mềm',    issue:'Đi muộn',         frequency:'2 lần/tháng', tone:'amber' },
-    { name:'Lê Thị Hoa',        position:'Chuyên viên QA',     issue:'Vắng không phép', frequency:'1 lần/tháng', tone:'rose' },
-    { name:'Bùi Thanh Tùng',    position:'DevOps Engineer',    issue:'Quên check-out',  frequency:'1 lần/tháng', tone:'slate' },
-    { name:'Trần Minh Đức',      position:'Tester viên',        issue:'Về sớm',           frequency:'2 lần/tháng', tone:'amber' },
-    { name:'Đặng Tuấn Anh',      position:'Frontend Dev',       issue:'Đi muộn',          frequency:'2 lần/tháng', tone:'amber' },
-    { name:'Hoàng Thu Thảo',     position:'Business Analyst',   issue:'Quên check-out',  frequency:'1 lần/tháng', tone:'slate' },
-    { name:'Phạm Hoàng Nam',     position:'Backend Dev',        issue:'Đi muộn',          frequency:'1 lần/tháng', tone:'slate' },
-    { name:'Vũ Hải Yến',         position:'Product Designer',   issue:'Quên check-in',   frequency:'1 lần/tháng', tone:'slate' },
+    { name: 'Nguyễn Văn Hùng', position: 'Kỹ sư phần mềm', issue: 'Đi muộn', frequency: '2 lần/tháng', tone: 'amber' },
+    { name: 'Lê Thị Hoa', position: 'Chuyên viên QA', issue: 'Vắng không phép', frequency: '1 lần/tháng', tone: 'rose' },
+    { name: 'Bùi Thanh Tùng', position: 'DevOps Engineer', issue: 'Quên check-out', frequency: '1 lần/tháng', tone: 'slate' },
+    { name: 'Trần Minh Đức', position: 'Tester viên', issue: 'Về sớm', frequency: '2 lần/tháng', tone: 'amber' },
+    { name: 'Đặng Tuấn Anh', position: 'Frontend Dev', issue: 'Đi muộn', frequency: '2 lần/tháng', tone: 'amber' },
+    { name: 'Hoàng Thu Thảo', position: 'Business Analyst', issue: 'Quên check-out', frequency: '1 lần/tháng', tone: 'slate' },
+    { name: 'Phạm Hoàng Nam', position: 'Backend Dev', issue: 'Đi muộn', frequency: '1 lần/tháng', tone: 'slate' },
+    { name: 'Vũ Hải Yến', position: 'Product Designer', issue: 'Quên check-in', frequency: '1 lần/tháng', tone: 'slate' },
   ];
   const meetings = [
-    { time:'09:30 - 10:30', status:'Chưa diễn ra', title:'Họp Daily Scrum phòng IT & Rà soát tiến độ Sprint 42',           place:'Phòng họp Polaris (Tầng 4)',                            people:'Lê Hoàng Dũng (Chủ trì), cùng 7 thành viên IT' },
-    { time:'14:00 - 15:00', status:'Chờ xác nhận', title:'Phỏng vấn ứng viên Senior Frontend Developer',                   place:'Phòng phỏng vấn 02 • Phối hợp cùng BP Nhân sự (HR)',    people:'Lê Hoàng Dũng, Trần Thu Hà (HR)' },
-    { time:'16:30 - 17:30', status:'Chưa diễn ra', title:'Báo cáo định kỳ tuần & Đánh giá năng suất công với Ban Giám đốc', place:'Phòng họp Hội đồng A • Trực tiếp',                     people:'Trưởng các phòng ban, Ban Giám đốc' },
+    { time: '09:30 - 10:30', status: 'Chưa diễn ra', title: 'Họp Daily Scrum phòng IT & Rà soát tiến độ Sprint 42', place: 'Phòng họp Polaris (Tầng 4)', people: 'Lê Hoàng Dũng (Chủ trì), cùng 7 thành viên IT' },
+    { time: '14:00 - 15:00', status: 'Chờ xác nhận', title: 'Phỏng vấn ứng viên Senior Frontend Developer', place: 'Phòng phỏng vấn 02 • Phối hợp cùng BP Nhân sự (HR)', people: 'Lê Hoàng Dũng, Trần Thu Hà (HR)' },
+    { time: '16:30 - 17:30', status: 'Chưa diễn ra', title: 'Báo cáo định kỳ tuần & Đánh giá năng suất công với Ban Giám đốc', place: 'Phòng họp Hội đồng A • Trực tiếp', people: 'Trưởng các phòng ban, Ban Giám đốc' },
   ];
   const [selected, setSelected] = useState<(typeof requests)[number] | null>(null);
   const [selectedMeeting, setSelectedMeeting] = useState<(typeof meetings)[number] | null>(null);
@@ -250,10 +254,10 @@ function ManagerDashboard() {
         </div>
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {[
-            ['6',  'Có mặt hôm nay / 8',   'group',        'emerald'],
-            ['1',  'Đi muộn hôm nay',       'schedule',     'amber'],
-            ['1',  'Vắng không phép',        'person_off',   'rose'],
-            ['1',  'Nghỉ phép hôm nay',      'beach_access', 'indigo'],
+            ['6', 'Có mặt hôm nay / 8', 'group', 'emerald'],
+            ['1', 'Đi muộn hôm nay', 'schedule', 'amber'],
+            ['1', 'Vắng không phép', 'person_off', 'rose'],
+            ['1', 'Nghỉ phép hôm nay', 'beach_access', 'indigo'],
           ].map(([v, l, i, c]) => (
             <div key={l} className={`card min-h-[96px] p-5 border-l-4 ${c === 'emerald' ? 'border-l-emerald-500' : c === 'amber' ? 'border-l-amber-500' : c === 'rose' ? 'border-l-rose-500' : 'border-l-indigo-500'}`}>
               <div className="flex items-start justify-between">
@@ -278,14 +282,14 @@ function ManagerDashboard() {
         </div>
         <div className="overflow-x-auto"><div className="grid min-w-[980px] grid-cols-7 text-xs">
           {[
-            {day:'T2',date:'23/10',status:'Đúng giờ',time:'08:25 - 12:02',items:[['task','Rà soát tài liệu','Hạn: 11:30'],['task','Kiểm tra log ra vào','Hạn: 16:30']]},
-            {day:'T3',date:'24/10',status:'Đi muộn',time:'08:42 - 12:05',items:[['meeting','Phòng họp 201','09:00 · Họp tuần'],['meeting','Phòng họp Polaris','14:00']]},
-            {day:'T4',date:'25/10',status:'Có phép',time:'-- : --',items:[['task','Chuẩn bị báo cáo','Hạn: 10:30'],['leave','Nghỉ phép định kỳ','Đã phê duyệt']]},
-            {day:'T5',date:'26/10',status:'Không phép',time:'-- : --',items:[]},
-            {day:'T6',date:'27/10',status:'Chưa diễn ra',time:'-- : --',items:[['task','Tổng hợp chấm công','Hạn: 11:45']]},
-            {day:'T7',date:'28/10',status:'Chưa diễn ra',time:'-- : --',items:[]},
-            {day:'CN',date:'29/10',status:'Ngày nghỉ tuần',time:'',items:[]},
-          ].map((d,dayIndex)=><div key={d.day} className="min-h-[188px] border-r border-slate-200 last:border-r-0"><div className="border-b bg-slate-50 px-3 py-3 text-center font-bold text-slate-700">{d.day} <span className="ml-1 font-normal text-slate-400">{d.date}</span></div><div className="p-3"><div className={`flex items-center justify-between font-semibold ${d.status==='Đúng giờ'||d.status==='Có phép'?'text-emerald-600':d.status==='Đi muộn'?'text-amber-600':d.status==='Không phép'?'text-rose-600':'text-slate-500'}`}><span>● {d.status}</span><span className="font-mono text-[10px] font-normal">{d.time}</span></div><div className="mt-3 space-y-2">{d.items.map((item,i)=>item[0]==='meeting'?<button key={item[1]} onClick={()=>setSelectedMeeting(meetingRows[Math.min(dayIndex,meetingRows.length-1)])} className="w-full border-l-2 border-blue-400 bg-blue-50/50 px-2 py-1.5 text-left hover:bg-blue-100"><b className="block text-[11px] text-slate-800">{item[1]}</b><span className="text-[10px] text-blue-600">{item[2]}</span></button>:item[0]==='task'?<Link key={item[1]} to={`/cong-viec?task=${dayIndex*2+i+1}`} className="block border-l-2 border-emerald-400 px-2 py-1.5 text-left hover:bg-emerald-50"><b className="block text-[11px] text-slate-800">{item[1]}</b><span className="text-[10px] text-slate-400">{item[2]}</span></Link>:<div key={item[1]} className="border-l-2 border-blue-400 px-2 py-1.5"><b className="block text-[11px]">{item[1]}</b><span className="text-[10px] text-blue-600">{item[2]}</span></div>)}</div>{!d.items.length&&<p className="mt-6 text-center italic text-slate-400">Không có sự kiện</p>}</div></div>)}
+            { day: 'T2', date: '23/10', status: 'Đúng giờ', time: '08:25 - 12:02', items: [['task', 'Rà soát tài liệu', 'Hạn: 11:30'], ['task', 'Kiểm tra log ra vào', 'Hạn: 16:30']] },
+            { day: 'T3', date: '24/10', status: 'Đi muộn', time: '08:42 - 12:05', items: [['meeting', 'Phòng họp 201', '09:00 · Họp tuần'], ['meeting', 'Phòng họp Polaris', '14:00']] },
+            { day: 'T4', date: '25/10', status: 'Có phép', time: '-- : --', items: [['task', 'Chuẩn bị báo cáo', 'Hạn: 10:30'], ['leave', 'Nghỉ phép định kỳ', 'Đã phê duyệt']] },
+            { day: 'T5', date: '26/10', status: 'Không phép', time: '-- : --', items: [] },
+            { day: 'T6', date: '27/10', status: 'Chưa diễn ra', time: '-- : --', items: [['task', 'Tổng hợp chấm công', 'Hạn: 11:45']] },
+            { day: 'T7', date: '28/10', status: 'Chưa diễn ra', time: '-- : --', items: [] },
+            { day: 'CN', date: '29/10', status: 'Ngày nghỉ tuần', time: '', items: [] },
+          ].map((d, dayIndex) => <div key={d.day} className="min-h-[188px] border-r border-slate-200 last:border-r-0"><div className="border-b bg-slate-50 px-3 py-3 text-center font-bold text-slate-700">{d.day} <span className="ml-1 font-normal text-slate-400">{d.date}</span></div><div className="p-3"><div className={`flex items-center justify-between font-semibold ${d.status === 'Đúng giờ' || d.status === 'Có phép' ? 'text-emerald-600' : d.status === 'Đi muộn' ? 'text-amber-600' : d.status === 'Không phép' ? 'text-rose-600' : 'text-slate-500'}`}><span>● {d.status}</span><span className="font-mono text-[10px] font-normal">{d.time}</span></div><div className="mt-3 space-y-2">{d.items.map((item, i) => item[0] === 'meeting' ? <button key={item[1]} onClick={() => setSelectedMeeting(meetingRows[Math.min(dayIndex, meetingRows.length - 1)])} className="w-full border-l-2 border-blue-400 bg-blue-50/50 px-2 py-1.5 text-left hover:bg-blue-100"><b className="block text-[11px] text-slate-800">{item[1]}</b><span className="text-[10px] text-blue-600">{item[2]}</span></button> : item[0] === 'task' ? <Link key={item[1]} to={`/cong-viec?task=${dayIndex * 2 + i + 1}`} className="block border-l-2 border-emerald-400 px-2 py-1.5 text-left hover:bg-emerald-50"><b className="block text-[11px] text-slate-800">{item[1]}</b><span className="text-[10px] text-slate-400">{item[2]}</span></Link> : <div key={item[1]} className="border-l-2 border-blue-400 px-2 py-1.5"><b className="block text-[11px]">{item[1]}</b><span className="text-[10px] text-blue-600">{item[2]}</span></div>)}</div>{!d.items.length && <p className="mt-6 text-center italic text-slate-400">Không có sự kiện</p>}</div></div>)}
         </div></div>
       </section>
 
@@ -313,7 +317,7 @@ function ManagerDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-xs">
-                {requestRows.slice(0,8).map(x => (
+                {requestRows.slice(0, 8).map(x => (
                   <tr key={x.id} onClick={() => setSelected(x)} className="group cursor-pointer transition hover:bg-blue-50/40">
                     <td className="px-4 py-3 font-semibold text-slate-800 group-hover:text-blue-700">{x.name}</td>
                     <td className="px-4 py-3 text-slate-600">{x.shortType}</td>
@@ -339,7 +343,7 @@ function ManagerDashboard() {
             </table>
           </div>
           <footer className="mt-auto flex justify-between border-t border-slate-100 bg-slate-50/60 px-5 py-3 text-xs">
-            <span className="text-slate-500">Hiển thị {Math.min(requestRows.length,8)} / {requestRows.length} yêu cầu</span>
+            <span className="text-slate-500">Hiển thị {Math.min(requestRows.length, 8)} / {requestRows.length} yêu cầu</span>
             <Link to="/qu-n-l-phi-u?scope=team" className="font-semibold text-blue-600">Xem tất cả phiếu →</Link>
           </footer>
         </section>
@@ -474,11 +478,11 @@ function ManagerDashboard() {
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {[
-                      ['LD','Lê Hoàng Dũng','Trưởng phòng IT','Chủ trì (Host)'],
-                      ['LB','Lê Thanh Bình','Frontend Developer','Thành viên dự án'],
-                      ['NH','Nguyễn Văn Hùng','Kỹ sư phần mềm','Thành viên dự án'],
-                      ['KL','Vũ Khánh Linh','Senior Dev','Thành viên dự án'],
-                      ['TH','Trần Thu Hà','Khách','Khách mời HR'],
+                      ['LD', 'Lê Hoàng Dũng', 'Trưởng phòng IT', 'Chủ trì (Host)'],
+                      ['LB', 'Lê Thanh Bình', 'Frontend Developer', 'Thành viên dự án'],
+                      ['NH', 'Nguyễn Văn Hùng', 'Kỹ sư phần mềm', 'Thành viên dự án'],
+                      ['KL', 'Vũ Khánh Linh', 'Senior Dev', 'Thành viên dự án'],
+                      ['TH', 'Trần Thu Hà', 'Khách', 'Khách mời HR'],
                     ].map((m, i) => (
                       <tr key={m[1]}>
                         <td className="px-4 py-2.5">
@@ -486,7 +490,7 @@ function ManagerDashboard() {
                             <span className={`flex h-7 w-7 items-center justify-center rounded-full text-[10px] font-bold ${i === 0 ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-700'}`}>{m[0]}</span>
                             <div>
                               <p className="text-xs font-semibold text-slate-800">{m[1]}</p>
-                              <p className="text-[9px] text-slate-400">⌕ 091{i+3}.456.{i+7}8</p>
+                              <p className="text-[9px] text-slate-400">⌕ 091{i + 3}.456.{i + 7}8</p>
                             </div>
                           </div>
                         </td>
@@ -587,27 +591,27 @@ function ManagerDashboard() {
                 <span className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-500">▣ Tháng 10/2024</span>
               </div>
               <div className="grid grid-cols-5 gap-2">
-                {[['1','Vắng không phép','rose'],['1','Đi muộn','amber'],['0','Về sớm','slate'],['0','Quên check-in','slate'],['0','Quên check-out','slate']].map(([val,label,tone])=><div key={label} className={`rounded-lg border p-3 text-center ${tone==='rose'?'border-rose-200':tone==='amber'?'border-amber-200':'border-slate-200'}`}><b className={`text-base ${tone==='rose'?'text-rose-500':tone==='amber'?'text-amber-500':'text-slate-600'}`}>{val}</b><p className="mt-1 text-[10px] text-slate-500">{label}</p></div>)}
+                {[['1', 'Vắng không phép', 'rose'], ['1', 'Đi muộn', 'amber'], ['0', 'Về sớm', 'slate'], ['0', 'Quên check-in', 'slate'], ['0', 'Quên check-out', 'slate']].map(([val, label, tone]) => <div key={label} className={`rounded-lg border p-3 text-center ${tone === 'rose' ? 'border-rose-200' : tone === 'amber' ? 'border-amber-200' : 'border-slate-200'}`}><b className={`text-base ${tone === 'rose' ? 'text-rose-500' : tone === 'amber' ? 'text-amber-500' : 'text-slate-600'}`}>{val}</b><p className="mt-1 text-[10px] text-slate-500">{label}</p></div>)}
               </div>
               <div className="overflow-hidden rounded-2xl border border-slate-200">
-                  <table className="w-full text-left">
-                    <thead className="bg-slate-50 text-xs uppercase text-slate-500">
-                      <tr>
-                        <th className="p-4">Ngày</th>
-                        <th className="p-4">Vi phạm</th>
-                        <th className="p-4">Ghi nhận</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      <tr>
-                        <td className="p-4 text-sm text-slate-700">21/10/2024</td>
-                        <td className={`p-4 text-sm font-semibold ${selectedViolation.tone==='rose'?'text-rose-600':selectedViolation.tone==='amber'?'text-amber-600':'text-slate-700'}`}>{selectedViolation.issue}</td>
-                        <td className="p-4 text-sm text-slate-500">Ghi nhận từ hệ thống chấm công</td>
-                      </tr>
-                      <tr><td className="p-4 text-sm text-slate-700">15/10/2024</td><td className="p-4 text-sm font-semibold text-amber-600">Đi muộn · 22 phút</td><td className="p-4 text-sm text-slate-500">Check-in lúc 08:22 tại sảnh Tầng 1</td></tr>
-                    </tbody>
-                  </table>
-                  <div className="border-t border-slate-100 px-4 py-3 text-right"><button className="text-xs font-semibold text-blue-600">Xem toàn bộ lịch sử →</button></div>
+                <table className="w-full text-left">
+                  <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+                    <tr>
+                      <th className="p-4">Ngày</th>
+                      <th className="p-4">Vi phạm</th>
+                      <th className="p-4">Ghi nhận</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    <tr>
+                      <td className="p-4 text-sm text-slate-700">21/10/2024</td>
+                      <td className={`p-4 text-sm font-semibold ${selectedViolation.tone === 'rose' ? 'text-rose-600' : selectedViolation.tone === 'amber' ? 'text-amber-600' : 'text-slate-700'}`}>{selectedViolation.issue}</td>
+                      <td className="p-4 text-sm text-slate-500">Ghi nhận từ hệ thống chấm công</td>
+                    </tr>
+                    <tr><td className="p-4 text-sm text-slate-700">15/10/2024</td><td className="p-4 text-sm font-semibold text-amber-600">Đi muộn · 22 phút</td><td className="p-4 text-sm text-slate-500">Check-in lúc 08:22 tại sảnh Tầng 1</td></tr>
+                  </tbody>
+                </table>
+                <div className="border-t border-slate-100 px-4 py-3 text-right"><button className="text-xs font-semibold text-blue-600">Xem toàn bộ lịch sử →</button></div>
               </div>
             </div>
             <footer className="flex justify-end border-t border-slate-100 bg-slate-50 px-7 py-5">
@@ -624,22 +628,22 @@ function ManagerDashboard() {
 
 function AdminDashboard() {
   const violations = [
-    ['21/10/2024 14:23','Nguyễn Văn Hùng','HungNV - DEV','Đi muộn',       'Mới ghi nhận',   'rose'],
-    ['21/10/2024 11:08','Phùng Văn Tùng', 'TungPV - FE', 'Nghỉ không phép','Đã xử lý',       'emerald'],
-    ['21/10/2024 09:15','Trần Minh Đức',  'DucTM - QA',  'Về sớm',         'Đang xác minh',  'amber'],
-    ['21/10/2024 08:42','Trần Thị Mai',   'MaiTT - HR',  'Đi muộn',        'Đã xử lý',       'emerald'],
+    ['21/10/2024 14:23', 'Nguyễn Văn Hùng', 'HungNV - DEV', 'Đi muộn', 'Mới ghi nhận', 'rose'],
+    ['21/10/2024 11:08', 'Phùng Văn Tùng', 'TungPV - FE', 'Nghỉ không phép', 'Đã xử lý', 'emerald'],
+    ['21/10/2024 09:15', 'Trần Minh Đức', 'DucTM - QA', 'Về sớm', 'Đang xác minh', 'amber'],
+    ['21/10/2024 08:42', 'Trần Thị Mai', 'MaiTT - HR', 'Đi muộn', 'Đã xử lý', 'emerald'],
   ];
   const requests = [
-    ['person_add',    'Đăng ký khách',       'Khách vãng lai & nhà thầu dịch vụ',         '12', 'amber'],
-    ['calendar_month','Cuộc họp có khách',   'Đăng ký phòng họp và danh sách dự kiến',    '5',  'violet'],
-    ['key',           'Cấp quyền ra/vào',    'Quyền truy cập khu vực máy chủ & hạn chế', '3',  'blue'],
-    ['description',   'Điều chỉnh lịch sử', 'Bổ sung check-in sót và giải trình',        '2',  'teal'],
+    ['person_add', 'Đăng ký khách', 'Khách vãng lai & nhà thầu dịch vụ', '12', 'amber'],
+    ['calendar_month', 'Cuộc họp có khách', 'Đăng ký phòng họp và danh sách dự kiến', '5', 'violet'],
+    ['key', 'Cấp quyền ra/vào', 'Quyền truy cập khu vực máy chủ & hạn chế', '3', 'blue'],
+    ['description', 'Điều chỉnh lịch sử', 'Bổ sung check-in sót và giải trình', '2', 'teal'],
   ];
   const meetings = [
-    ['Họp triển khai dự án',      'Nội bộ',   'Phòng họp A1','09:00 - 10:00','Sắp diễn ra', 'amber'],
-    ['Tiếp đón đối tác ABC',      'Có khách', 'Phòng họp B1','10:30 - 11:30','Đang đón khách','amber'],
-    ['Họp định kỳ Ban quản lý',   'Nội bộ',   'Phòng họp A2','14:00 - 15:00','Chờ xác nhận',  'amber'],
-    ['Trao đổi giải pháp an ninh','Có khách', 'Phòng họp B2','16:00 - 17:00','Đã kết thúc',  'slate'],
+    ['Họp triển khai dự án', 'Nội bộ', 'Phòng họp A1', '09:00 - 10:00', 'Sắp diễn ra', 'amber'],
+    ['Tiếp đón đối tác ABC', 'Có khách', 'Phòng họp B1', '10:30 - 11:30', 'Đang đón khách', 'amber'],
+    ['Họp định kỳ Ban quản lý', 'Nội bộ', 'Phòng họp A2', '14:00 - 15:00', 'Chờ xác nhận', 'amber'],
+    ['Trao đổi giải pháp an ninh', 'Có khách', 'Phòng họp B2', '16:00 - 17:00', 'Đã kết thúc', 'slate'],
   ];
 
   return (
@@ -647,10 +651,10 @@ function AdminDashboard() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
         {[
-          ['108', 'Nhân sự đang có mặt', 'groups',        'emerald'],
-          ['8',   'Cuộc họp hôm nay',    'calendar_month','rose'],
-          ['6',   'Tổng vi phạm',         'shield',        'indigo'],
-          ['10',  'Yêu cầu chờ xử lý',   'task',          'cyan'],
+          ['108', 'Nhân sự đang có mặt', 'groups', 'emerald'],
+          ['8', 'Cuộc họp hôm nay', 'calendar_month', 'rose'],
+          ['6', 'Tổng vi phạm', 'shield', 'indigo'],
+          ['10', 'Yêu cầu chờ xử lý', 'task', 'cyan'],
         ].map(([v, l, i, c]) => (
           <div key={l} className={`card p-5 border-t-4 ${c === 'emerald' ? 'border-t-emerald-500' : c === 'rose' ? 'border-t-rose-400' : c === 'indigo' ? 'border-t-indigo-500' : 'border-t-cyan-500'}`}>
             <div className="flex items-center justify-between">
