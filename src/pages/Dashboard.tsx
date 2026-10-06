@@ -255,9 +255,9 @@ function ManagerDashboard() {
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {[
             ['6', 'Có mặt hôm nay / 8', 'group', 'emerald'],
-            ['1', 'Đi muộn hôm nay', 'schedule', 'amber'],
+            ['1', 'Đi muộn ', 'schedule', 'amber'],
             ['1', 'Vắng không phép', 'person_off', 'rose'],
-            ['1', 'Nghỉ phép hôm nay', 'beach_access', 'indigo'],
+            ['1', 'Nghỉ phép', 'beach_access', 'indigo'],
           ].map(([v, l, i, c]) => (
             <div key={l} className={`card min-h-[96px] p-5 border-l-4 ${c === 'emerald' ? 'border-l-emerald-500' : c === 'amber' ? 'border-l-amber-500' : c === 'rose' ? 'border-l-rose-500' : 'border-l-indigo-500'}`}>
               <div className="flex items-start justify-between">
